@@ -490,6 +490,16 @@ function listAllEventsEdit()
 	
 }
 
+function convertDate($date){
+	$dateTime = strtotime($date) ;
+	$newdate = strftime('%d-%B-%Y %H:%M',$dateTime);
+	$newdate = str_replace( 
+		array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
+		array('Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'),
+		$newdate
+	);
+	return $newdate;
+}
 // Display all Types (sort of category for Events)
 function listAllWaiting()
 {
