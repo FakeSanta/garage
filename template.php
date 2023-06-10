@@ -263,6 +263,7 @@
     <script src="../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
     <script src="../assets/vendor/js/menu.js"></script>
     <script src="../assets/js/main.js"></script>
+		<script src="calendar/assets/js/listings.js"></script>
     <script async defer src="https://buttons.github.io/buttons.js"></script>
   </body>
 </html>
