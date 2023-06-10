@@ -1,0 +1,90 @@
+<?php
+	require 'config.php';
+  if(empty($_SESSION['username'])){
+    header("location:login");
+  }
+  $title = "État du parc | ".$brend;
+  $page = "table_parc";
+?>
+<?php ob_start(); ?>
+          <div class="content-wrapper">
+            <!-- Content -->
+
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Consulter / </span>État du parc</h4>
+
+              <!-- Basic Bootstrap Table -->
+              <div class="card">
+                <h5 class="card-header">Parc Auto <?php echo $brend ?></h5>
+                <div class="table-responsive text-nowrap">
+                  <?php
+                      #$sql = $connect->prepare("SELECT * FROM VEHICULE, VIDANGE, CT WHERE VEHICULE.id = VIDANGE.id_vehicule AND VEHICULE.id = CT.id_vehicule");
+                      $sql = $connect->prepare("SELECT * FROM VEHICULE ORDER BY immatriculation ASC");
+                      $sql->execute();
+                    
+                      if($sql->rowCount()) {
+
+                  ?>
+                  <table class="table table-hover table-striped">
+                    <thead>
+                      <tr>
+                        <th>Immatriculation</th>
+                        <th>Marque</th>
+                        <th>Modèle</th>
+                        <th>Motorisation</th>
+                        <?php if($_SESSION['role'] == 1 || $_SESSION['role'] == 2){?>
+                        <th>Action</th>
+                        <?php } ?>
+                        <!--<th>Prochain CT</th>-->
+                      </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                      <?php
+                        while($row = $sql->fetch(PDO::FETCH_ASSOC))
+                        {
+                      ?>
+                      <tr>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><?php print($row['immatriculation']) ?></strong></td>
+                        <td><?php print($row['marque'])?></td>
+                        <td>
+                          <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center"><?php print($row['modele'])?>
+                          </ul>
+                        </td>
+                        <td><span class="badge bg-label-<?php if($row['motorisation'] == 'Diesel'){print('warning');}elseif($row['motorisation'] == 'Essence'){print('success');}elseif($row['motorisation'] == 'Electrique'){print('info');}else{print('primary');}?> me-1"><?php print($row['motorisation']) ?></span></td>
+                        <?php if($_SESSION['role'] == 1 || $_SESSION['role'] == 2){?>
+                        <form method="POST" action="">    
+                          <td>
+                              <button type="submit" class="btn p-0 dropdown-toggle hide-arrow" name="del_id" value="<?php print($row['id']) ?>">
+                                <i class="bx bx-trash me-1" id="<?php print($row['immatriculation']) ?>"></i> Supprimer
+                              </button>
+                          </td>
+                        </form>
+                        <?php } ?>
+                      </tr>
+                      <?php
+                        }
+                      ?>
+                    </tbody>
+                  </table>
+                  <?php
+                    }
+                    if(isset($_POST['del_id'])){
+                      $id=$_POST['del_id'];
+                      echo"<script>console.log('".$id."')</script>";
+                      $del_selected = $connect->prepare('DELETE FROM VEHICULE WHERE id = :id');
+                      $del_selected->execute(
+                        array(
+                          'id' => $id
+                        )
+                      );
+                      header('Location:table_parc');
+                    }
+                  ?>
+                </div>
+              </div>
+              <!--/ Basic Bootstrap Table -->
+
+              <hr class="my-5" />
+            <!-- / Content -->
+            <?php $content = ob_get_clean(); ?>
+<?php require('template.php'); ?>
