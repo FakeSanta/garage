@@ -1,5 +1,6 @@
 <?php
   $admin = false; 
+  require("model/functions.php");
 	require 'config.php';
   require 'check.php';
   $title = "Accueil | ".$brend;
@@ -257,6 +258,7 @@
         </div>
       </div>
       <!-- Troisième Ligne -->
+      <?php if($_SESSION['role'] != 0){ ?>
       <div class="row">
         <!-- Grande carte gauche-->
         <div class="col-lg-8 mb-4 order-0">
@@ -264,80 +266,10 @@
             <div class="d-flex align-items-end row">
               <div class="col-sm-12">
                 <div class="card-body">
-                  <h5 class="card-title text-primary">Réservation à valider : </h5>
+                  <h5 class="card-title text-primary">Réservation en attente : </h5>
                   <div class="table-responsive text-nowrap">
-                  <p class="mb-4">
                     <?php
-                      $accept_booking = $connect->prepare("SELECT reservation.id AS reservation_id,
-                      reservation.id_vehicule AS reservation_id_vehicule,
-                      reservation.description AS reservation_description,
-                      reservation.start AS reservation_start,
-                      reservation.end AS reservation_end,
-                      reservation.color AS reservation_color,
-                      reservation.id_user AS reservation_id_user,
-                      reservation.accepted AS reservation_accepted,
-                      VEHICULE.id AS vehicule_id,
-                      VEHICULE.immatriculation AS vehicule_immatriculation,
-                      VEHICULE.marque AS vehicule_marque,
-                      VEHICULE.modele AS vehicule_modele,
-                      VEHICULE.motorisation AS vehicule_motorisation,
-                      VEHICULE.kilometrage AS vehicule_kilometrage,
-                      VEHICULE.utilitaire AS vehicule_utilitaire,
-                      VEHICULE.reservable AS vehicule_reservable,
-                      USER.id AS user_id,
-                      USER.username AS user_username,
-                      USER.mdp AS user_mdp,
-                      USER.role AS user_role
-                    FROM reservation, VEHICULE, USER
-                    WHERE VEHICULE.id = reservation.id_vehicule
-                    AND reservation.id_user = USER.id
-                    AND accepted = 0
-                    ORDER BY reservation_start ASC");
-                      $accept_booking->execute();
-                      if($accept_booking->rowCount()){
-                    ?>
-                    <table class="table table-hover">
-                      <thead>
-                        <tr>
-                          <th>Véhicule</th>
-                          <th>Du</th>
-                          <th>Au</th>
-                          <th>Par</th>
-                          <th>Valider</th>
-                          <th>Refuser</th>
-                        </tr>
-                      </thead>
-                      <tbody class="table-border-bottom-0">
-                        <?php
-                          while($row = $accept_booking->fetch(PDO::FETCH_ASSOC))
-                          {
-                            $id = $row['reservation_id'];
-                            $start = convertDate($row['reservation_start']);
-                            $end = convertDate($row['reservation_end']);
-                        ?>
-                        <tr>
-                          <form method="POST">   
-                            <td><b><?php print($row['vehicule_modele']."</b> | ".$row['vehicule_immatriculation']) ?></td>
-                            <td><?php print($start) ?></td>
-                            <td><?php print($end) ?></td>
-                            <td><?php print($row['user_username']) ?></td>
-                            <td><a href="javascript:EliminaTipo('<?php echo $id; ?>')" role="button"><i class="bx bx-check me-1"></i> Valider</a></td>
-                            <td><a href="javascript:rejectBooking('<?php echo $id; ?>')" role="button"><i class="bx bx-trash me-1"></i> Refuser</a></td>
-                          </form>
-                        </tr>
-                        <?php                           
-                          }
-                        ?>
-                      </tbody>
-                    </table>
-                    <?php
-                      }else{
-                    ?>
-                    <p class="mb-4">
-                      Pas de réservation à valider
-                    </p>
-                    <?php
-                      }
+                      listAllWaitingIndex();
                     ?>
                   </div>
                 </div>
@@ -346,6 +278,9 @@
           </div>
         </div>
       </div>
+      <?php
+        }
+      ?>
     </div>
     <div class="content-backdrop fade"></div>
   </div>
