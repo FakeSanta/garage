@@ -137,32 +137,7 @@ error_reporting(E_ALL);
 															</select>
 														</div>
 													</div>
-													<!--<script>
-														function loadData(selectedValue) {
-														$.ajax({
-															url: "request.php",
-															type: "POST",
-															data: {id: selectedValue},
-															success: function(response){
-																var data = JSON.parse(response);
-																var html = '';
-																$.each(data, function(key, value) {
-																html += '<option value="">' + value.nom + '</strong></td>';
-																});
-																$("#car_selected tbody").html(html);
-															}
-															});
-														}
-
-														$(document).ready(function(){
-															loadData($("#config").val());
-															$("#config").on("change", function(){
-																var selectedValue = $(this).val();
-																loadData(selectedValue);
-															});
-														});
-													</script>-->
-													<!-- Text input-->
+													
 													<div class="form-group col-md-6">
 														<label class="col-md-3 control-label" for="start">Du</label>
 														<div class="input-group date form_date col-md-6" data-date="" data-date-format="dd-MM-yyyy hh:ii" data-link-field="start" data-link-format="yyyy-mm-dd hh:ii">
@@ -383,16 +358,14 @@ error_reporting(E_ALL);
 					
 					// Variables from form
 							$voiture = htmlspecialchars($_POST['voiture'], ENT_QUOTES);
-							//$image = $_FILES['image'];
 							$description = trim(preg_replace('/\s+/', ' ',nl2br(str_replace( "'", "´", $_POST['description']))));
-							//$location = trim(preg_replace('/\s+/', ' ',nl2br(str_replace( "'", "´", $_POST['location']))));							
-							//$url = antiSQLInjection($_POST['url']);
+
 							$start = $_POST['start'];
 							$end = $_POST['end'];
 							
 					if (empty($start) || empty($end)) {
 						echo "<script type='text/javascript'>swal('Ooops...!', 'Vous devez remplir les dates', 'error');</script>";	
-						echo '<meta http-equiv="refresh" content="1; ./reservation">'; 
+						echo '<meta http-equiv="refresh" content="2; ./reservation">'; 
 						return false;
 					}
 					if (!empty($start) || !empty($end) || !empty($voiture)) {
@@ -436,11 +409,12 @@ error_reporting(E_ALL);
 							$infoVoiture = $getVoiture->fetch(PDO::FETCH_ASSOC);
 							// If information is correctly saved		
 							if (!$sql) {
-							echo ("Can't insert into database: " . mysqli_error());
+							echo ("Can't insert into database: ");
 							return false;
 							} else {
 								if($accepted == 0){
 									$mail = new PHPMailer();
+									$mail->CharSet = "UTF-8";
 									$mail->IsSMTP();
 									$mail->Mailer = "smtp";
 
@@ -453,8 +427,8 @@ error_reporting(E_ALL);
 									$mail->Password   = "rvnqrxyankxtuegm";
 									$mail->AddAddress("aurelienfevrier08@gmail.com","Auto ".$brend);
 									$mail->SetFrom("supervision.decomble@gmail.com", "Auto ".$brend);
-									$mail->Subject = $_SESSION['username']." - Demande une reservation pour ".$infoVoiture['modele']." ".$infoVoiture['marque']." | ".$infoVoiture['immatriculation']." de ".$new_start." à ".$new_end;
-									$content = $_SESSION['username']." - Demande une reservation pour ".$infoVoiture['modele']." ".$infoVoiture['marque']." | ".$infoVoiture['immatriculation']." de ".$new_start." à ".$new_end;
+									$mail->Subject = $_SESSION['username']." - Demande une réservation pour ".$infoVoiture['modele']." ".$infoVoiture['marque']." | ".$infoVoiture['immatriculation']." de ".$new_start." à ".$new_end;
+									$content = $_SESSION['username']." - Demande une réservation pour ".$infoVoiture['modele']." ".$infoVoiture['marque']." | ".$infoVoiture['immatriculation']." de ".$new_start." à ".$new_end;
 									$mail->MsgHTML($content); 
 									if(!$mail->Send()) {
 										echo "Error while sending Email.";
@@ -486,7 +460,7 @@ error_reporting(E_ALL);
 		 
 					// If information is correctly saved			
 					if (!$sql) {
-					echo ("Can't insert into database: " . mysqli_error());
+					echo ("Can't insert into database: ");
 					return false;
 					} else {
 							echo "<script type='text/javascript'>swal('Parfait !', 'Salle ajoutée !', 'success');</script>";

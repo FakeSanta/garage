@@ -34,6 +34,7 @@ $end = str_replace(
 
 
 $mail = new PHPMailer();
+$mail->CharSet = "UTF-8";
 $mail->IsSMTP();
 $mail->Mailer = "smtp";
 
