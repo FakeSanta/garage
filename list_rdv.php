@@ -77,8 +77,6 @@
                     }
                     if(isset($_POST['del_id'])){
                       $id=$_POST['del_id'];
-                      
-                      echo"<script>console.log('".$id."')</script>";
                       $rdv_pris = $connect->prepare("SELECT V.id AS vehicule_id, V.immatriculation AS vehicule_immatriculation, V.marque AS vehicule_marque, V.modele AS vehicule_modele, V.motorisation AS vehicule_motorisation, V.kilometrage AS vehicule_kilometrage, V.utilitaire AS vehicule_utilitaire, V.rdv_pris AS vehicule_rdv_pris
                       FROM VEHICULE V
                       INNER JOIN RDV R ON V.id = R.id_vehicule
@@ -89,7 +87,6 @@
                           'id' => $id
                         )
                       );
-                      echo"<script>console.log('Je récupère le véhicule')</script>";
                       $id_vehicule = $rdv_pris->fetch(PDO::FETCH_ASSOC);
                       $content = "**".strtoupper($_SESSION['username'])."** - RDV annulé pour le véhicule : **".$id_vehicule['vehicule_immatriculation']."** ".$id_vehicule['vehicule_marque']." ".$id_vehicule['vehicule_modele'];
                       sendDiscordAlert($content);
@@ -99,15 +96,12 @@
                           'id' => $id_vehicule['vehicule_id']
                         )
                       );
-                      echo"<script>console.log('J'update le rdv sur vehicule')</script>";
                       $update_rdv = $connect->prepare('UPDATE RDV SET rdv_annule = 1 WHERE id = :id');
                       $update_rdv->execute(
                         array(
                           'id' => $id
                         )
                       );
-                      echo"<script>console.log('J'update le rdv sur rdv')</script>";
-
                       header('Location:list_rdv');
                     }
                   ?>
