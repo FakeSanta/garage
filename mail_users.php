@@ -116,6 +116,7 @@
 
                     if (isset($_POST['test_id'])) {
                       $mail = new PHPMailer();
+                      $mail->CharSet = "UTF-8";
                       $mail->IsSMTP();
                       $mail->Mailer = "smtp";
 
@@ -134,6 +135,7 @@
                       $content = "Test d'envoi mail d'Auto ".$brend;
 
                       $mail->MsgHTML($content); 
+
                       if(!$mail->Send()) {
                         echo "Error while sending Email.";
                         echo "<script>console.log(" . json_encode($mail) . ")</script>";
