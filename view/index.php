@@ -295,8 +295,6 @@
                     ORDER BY reservation_start ASC");
                       $accept_booking->execute();
                       if($accept_booking->rowCount()){
-
-                      }
                     ?>
                     <table class="table table-hover">
                       <thead>
@@ -313,7 +311,7 @@
                         <?php
                           while($row = $accept_booking->fetch(PDO::FETCH_ASSOC))
                           {
-                            $id = $row['reservation_id']
+                            $id = $row['reservation_id'];
                             $start = convertDate($row['reservation_start']);
                             $end = convertDate($row['reservation_end']);
                         ?>
@@ -332,6 +330,15 @@
                         ?>
                       </tbody>
                     </table>
+                    <?php
+                      }else{
+                    ?>
+                    <p class="mb-4">
+                      Pas de réservation à valider
+                    </p>
+                    <?php
+                      }
+                    ?>
                   </div>
                 </div>
               </div>
