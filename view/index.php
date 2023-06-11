@@ -116,21 +116,18 @@
                 <div class="card-body">
                   <h5 class="card-title text-primary">Contrôles techniques en approche : </h5>
                   <div class="table-responsive text-nowrap">
-                  <p class="mb-4">
                     <?php
-                      $check_ct = $connect->prepare("SELECT * FROM VEHICULE INNER JOIN CT ON VEHICULE.id = CT.id_vehicule WHERE rdv_pris = 0 ORDER BY date_ct ASC");
+                      $check_ct = $connect->prepare("SELECT * FROM VEHICULE, RDV, CT WHERE VEHICULE.id = CT.id_vehicule   AND VEHICULE.id = RDV.id_vehicule   AND rdv_pris = 0   AND rdv_annule = 0   AND prochaine_date_ct < DATE_ADD(CURDATE(), INTERVAL 60 DAY) ORDER BY date_ct ASC");
                       $check_ct->execute();
                       if($check_ct->rowCount()){
-
-                      }
-                      $ct_soon = false;
+                      
                     ?>
                     <table class="table table-hover">
                       <thead>
                         <tr>
                           <th>Jours</th>
                           <th>Véhicule</th>
-                          <?php if($_SESSION['role'] == 1 || $_SESSION['role'] == 2){?>
+                          <?php if($_SESSION['role'] != 0){?>
                           <th>Prise de RDV</th>
                           <?php } ?>
                         </tr>
@@ -139,28 +136,20 @@
                         <?php
                           while($row = $check_ct->fetch(PDO::FETCH_ASSOC))
                           {
-                            $verif_rdv = $connect->prepare("SELECT * FROM RDV WHERE id_vehicule = :id_vehicule AND date_rdv > CURDATE() AND rdv_annule = 0");
-                            $verif_rdv->execute(['id_vehicule' => $row['id_vehicule']]);
-                            if($verif_rdv->rowCount()){
-
-                            }else{
                               $next_ct = $row['prochaine_date_ct'];
-                              $next_ct_date = strtotime($next_ct);                   
-                              $id_vehicule = $row['id_vehicule'];
                               $count_days_query = $connect->prepare("SELECT DATEDIFF('$next_ct', CURDATE()) AS diff_date");
                               $count_days_query->execute();
                               $days_diff = $count_days_query->fetch(PDO::FETCH_ASSOC);
-                              if($days_diff['diff_date'] <= 360 && $days_diff['diff_date'] > 0){
-                                  $ct_soon = true;
+                              if($days_diff['diff_date'] > 0){
                             
                         ?>
-                        <tr class="table-warning">
+                        <tr <?php if($days_diff['diff_date'] <= 14){?>class="table-warning"<?php }?>>
                           <form method="POST" action="register_rdv">    
                             <td><i class="fab fa-angular fa-lg text-danger me-3"></i><?php print("<b>".$days_diff['diff_date']." jours</b> restant pour le contrôle technique de :") ?></td>
                             <td><b><?php print($row['modele']."</b> | ".$row['immatriculation']) ?></td>
-                            <?php if($_SESSION['role'] == 1 || $_SESSION['role'] == 2){?>
+                            <?php if($_SESSION['role'] != 0){?>
                             <td>
-                              <button type="submit" class="btn p-0 dropdown-toggle hide-arrow" name="register_rdv" value="<?php print($id_vehicule) ?>">
+                              <button type="submit" class="btn p-0 dropdown-toggle hide-arrow" name="register_rdv" value="<?php print($row['id_vehicule']) ?>">
                                 <i class="bx bx-calendar me-1" id="<?php print($row['immatriculation']) ?>"></i> RDV
                               </button>
                             </td>
@@ -174,7 +163,7 @@
                                     <form method="POST" action="register_rdv">    
                                       <td><i class="fab fa-angular fa-lg text-danger me-3"></i><?php print("Contrôle technique périmé de <b>".abs($days_diff['diff_date'])." jours </b>pour :") ?></td>
                                       <td><b><?php print($row['modele']."</b> | ".$row['immatriculation']) ?></td>
-                                      <?php if($_SESSION['role'] == 1 || $_SESSION['role'] == 2){?>
+                                      <?php if($_SESSION['role'] != 0){?>
                                       <td>
                                         <button type="submit" class="btn p-0 dropdown-toggle hide-arrow" name="register_rdv" value="<?php print($id_vehicule) ?>">
                                           <i class="bx bx-calendar me-1" id="<?php print($row['immatriculation']) ?>"></i> RDV
@@ -186,10 +175,16 @@
                                 <?php
                               }
                             }                          
-                          }
                         ?>
                       </tbody>
                     </table>
+                    <?php
+                      }else{
+                        echo'<p class="mb-4">';
+                          echo'Aucun rendez-vous à prendre avant les 2 prochains mois';
+                        echo'</p>';
+                      }
+                    ?>
                   </div>
                 </div>
               </div>
