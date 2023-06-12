@@ -50,19 +50,20 @@ function insertCarKm($immat, $marque, $modele, $motorisation, $utilitaire){
 
 function checkLogin($login,$password){
     $connectdb = dbConnect();
-    $query = "SELECT * FROM USER WHERE username = :username AND mdp = :password";  
+
+    $query = "SELECT * FROM USER WHERE username = :username";  
     $statement = $connectdb->prepare($query);  
     $statement->execute(  
          array(  
               'username'     =>     $login,  
-              'password'     =>     $password  
          )  
     );
-    if($statement->rowCount()){
-        return true;
-    }else{
-        return false;
-    }
+	$row = $statement->fetch(PDO::FETCH_ASSOC);
+	if(password_verify($password, $row['mdp'])){
+		return true;
+	}else{
+		return false;
+	}
 }
 
 function getLogInfo($login){

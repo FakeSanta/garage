@@ -1,36 +1,8 @@
 <?php
-  $admin = true;
-	require 'config.php';
-  require 'check.php';
-	  if(isset($_POST["register"]))
-      {  
-        if($_POST['password'] == $_POST['password_confirm'])
-        {
-            $username = $_POST['username'];
-            $hash_password = password_hash($_POST['password'], PASSWORD_BCRYPT);
-            $role = $_POST['roleSelect'];
-            $mail = $_POST['email'];
-            $query_exist = $connect->prepare("SELECT * FROM USER WHERE username = :username OR mail = :mail");
-            $query_exist->execute(
-                array(
-                  'username' => $username,
-                  'mail' => $mail
-                )
-            );
-          
-            if($query_exist->rowCount()) {
-              echo'<div class="alert alert-danger" role="alert">Cet utilisateur ou ce mail existe déjà </div>';
-            }
-            else{     
-                $register_user = $connect->prepare('INSERT INTO USER (username, mdp, role, mail) VALUES (?,?,?,?)')->execute([$username, $hash_password, $role,$mail]);
-                header('location:index');
-            }  
-        }
-        else{
-          echo'<div class="alert alert-danger" role="alert">Les mots de passes ne correspondent pas</div>';
-        }
-    }
-    ?>
+$admin = true;
+require ('model/functions.php');
+require 'config.php';
+?>
 <!DOCTYPE html>
 
 <!-- =========================================================
@@ -60,7 +32,7 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>Ajout un utilisateur | <?php echo $brend ?></title>
+    <title>Mettre à jour le mot de passe | <?php echo $brend ?></title>
 
     <meta name="description" content="" />
 
@@ -107,25 +79,19 @@
           <div class="card">
             <div class="card-body">
               <?php
-                if(isset($_POST['register'])){
-                  if($_POST['password'] == $_POST['password_confirm']){
-                  }
-                }
+                if(isset($_GET['email']) && isset($_GET['reset_token'])){
+                    $date = date('Y-m-d');
+                    $email = $_GET['email'];
+                    $reset_token = $_GET['reset_token'];
+
+                    $sql = $connect->prepare("SELECT * FROM USER WHERE mail = ? AND resettoken = ? AND resettokenexp = ?");
+                    $sql->execute([$email,$reset_token,$date]);
+                    if($sql->rowCount()){
+                
               ?>
-            <h4 class="mb-2">Enregistrer un utilisateur</h4>
+            <h4 class="mb-2">Mettre à jour le mot de passe</h4>
             <hr class="my-4" />
               <form id="formAuthentication" class="mb-3" method="POST">
-                <div class="mb-3">
-                  <label for="email" class="form-label">Identifiant</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="username"
-                    name="username"
-                    required
-                    autofocus
-                  />
-                </div>
                 <div class="mb-3 form-password-toggle">
                   <div class="d-flex justify-content-between">
                     <label class="form-label" for="password">Mot de passe</label>
@@ -156,33 +122,24 @@
                         />
                     </div>
                 </div>
-                <div class="mb-3 form-password-toggle">
-                    <div class="d-flex justify-content-between">
-                        <label class="form-label" for="password">E-mail</label>
-                    </div>
-                    <div class="input-group input-group-merge">
-                        <input
-                        type="email"
-                        id="email"
-                        class="form-control"
-                        name="email"
-                        aria-describedby="email"
-                        required
-                        />
-                    </div>
-                </div>
                 <div class="mb-3">
-                    <label for="roleSelect" class="form-label">Rôle</label>
-                    <select class="form-select" name="roleSelect">
-                        <option value="0">Consultant</option>
-                        <option value="1">Administrateur</option>
-                        <option value="2">Chef des travaux</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                  <button class="btn btn-primary d-grid w-100" name="register" type="submit">Enregistrer</button>
+                  <button class="btn btn-primary d-grid w-100" name="update" type="submit">Enregistrer</button>
                 </div>
               </form>
+              <?php
+                    }
+                }
+                if(isset($_POST['update'])){
+                    if($_POST['password'] == $_POST['password_confirm']){
+                        $hash_password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+                        $update = $connect->prepare('UPDATE USER SET mdp = ?, resettoken = NULL, resettokenexp = NULL WHERE mail = ?');
+                        $update->execute([$hash_password, $email]);
+                        echo '<meta http-equiv="refresh" content="1; ./login">'; 
+                    }else{
+                        echo"<script>alert('Les mots de passes ne correspondent pas')</script>";
+                    }
+                }
+              ?>
             </div>
           </div>
           <!-- /Register -->

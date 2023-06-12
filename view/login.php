@@ -51,11 +51,15 @@
                     name="username"
                     autofocus
                     required
+                    tabindex=1
                   />
                 </div>
                 <div class="mb-3 form-password-toggle">
                   <div class="d-flex justify-content-between">
                     <label class="form-label" for="password">Mot de passe</label>
+                    <a href="forgot-password">
+                      <small>Mot de passe oublié ?</small>
+                    </a>
                   </div>
                   <div class="input-group input-group-merge">
                     <input
@@ -65,11 +69,12 @@
                       name="password"
                       aria-describedby="password"
                       required
+                      tabindex=2
                     />
                   </div>
                 </div>
                 <div class="mb-3">
-                  <button class="btn btn-primary d-grid w-100" name="login" type="submit">Connexion</button>
+                  <button class="btn btn-primary d-grid w-100" name="login" type="submit" tabindex=3>Connexion</button>
                 </div>
               </form>
             </div>
