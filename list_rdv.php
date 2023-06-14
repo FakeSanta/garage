@@ -52,21 +52,16 @@
                               array('Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'),
                               $new_date
                             );
+                            $id = $row['rdv_id'];
                       ?>
                       <tr>
                         <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><?php print($new_date) ?></strong></td>
                         <td><?php print($row['marque'])?></td>
                         <td><?php print($row['modele'])?></td>
                         <td><?php print($row['immatriculation'])?></td>
-                        <?php if($_SESSION['role'] == 1 || $_SESSION['role'] == 2){?>
-                        <form method="POST" action="">    
-                          <td>
-                              <button type="submit" class="btn p-0 dropdown-toggle hide-arrow" name="del_id" value="<?php print($row['rdv_id']) ?>">
-                                <i class="bx bx-calendar-x me-1"></i> Annuler le RDV
-                              </button>
-                          </td>
-                        </form>
-                        <?php } ?>
+                        <?php if($_SESSION['role'] != 0){
+                          echo"<td><a href='javascript:DelRendezVous(".$id.")' class='btn btn-danger btn-sm' role='button'><i class='bx bx-calendar-x me-1'></i> Annuler le RDV</a></td>";
+                         } ?>
                       </tr>
                       <?php
                         }
@@ -90,6 +85,9 @@
                       $id_vehicule = $rdv_pris->fetch(PDO::FETCH_ASSOC);
                       $content = "**".strtoupper($_SESSION['username'])."** - RDV annulé pour le véhicule : **".$id_vehicule['vehicule_immatriculation']."** ".$id_vehicule['vehicule_marque']." ".$id_vehicule['vehicule_modele'];
                       sendDiscordAlert($content);
+
+
+
                       $update_vehicule = $connect->prepare("UPDATE VEHICULE SET rdv_pris = 0 WHERE id = :id");
                       $update_vehicule->execute(
                         array(

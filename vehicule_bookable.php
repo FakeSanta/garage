@@ -14,48 +14,62 @@
 
               <!-- Basic Bootstrap Table -->
               <!-- Form controls -->
-              <div class="col-md-6">
-                  <div class="card mb-4">
-                    <h5 class="card-header"></h5>
-                    <div class="card-body">
-                      <form action="" method="POST">
-                      <div class="mb-3">
-                          <label for="carSelect" class="form-label">Véhicule</label>
-                          <select class="form-select" id="carSelect">
+                  <div class="card">
+                    <h5 class="card-header">Véhicule</h5>
+                        <div class="table-responsive text-nowrap">
+                          <table class="table table-hover">
+                            <thead>
+                              <tr>
+                                <th>Immatriculation</th>
+                                <th>Marque</th>
+                                <th>Modèle</th>
+                                <?php if($_SESSION['role'] != 0){?>
+                                <th>Réservable</th>
+                                <?php } ?>
+                              </tr>
+                            </thead>
+                            <tbody class="table-border-bottom-0">
                           <?php
                             $fill_select = $connect->prepare('SELECT * FROM VEHICULE ORDER BY modele ASC');
                             $fill_select->execute();
                             while($row = $fill_select->fetch(PDO::FETCH_ASSOC))
                             {
+                              $reservable = $row['reservable'];
+                              $id = $row['id'];
                           ?>
-                            <option value="<?php print($row['id'])?>"><?php print($row['modele']." ".$row['marque']." | ".$row['immatriculation'])?></option>
-                          <?php
-                            }
-                          ?>
-                          </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="resSelect" class="form-label">Disponible :</label>
-                            <select class="form-select" id="resSelect">
-                            </select>
-                        </div>
-                        <hr class="my-4" />
-                        <div class="d-grid gap-2 col-lg-6 mx-auto">
-                          <button class="btn btn-primary btn-lg" name="modify_vehicule_bookable" type="submit">Modifier</button>
-                        </div>
-                      </form>
+                            <tr <?php if($reservable == 1){?>class="table-danger"<?php }else{?>class="table-success"<?php }?>>
+                              <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><?php print($row['immatriculation']) ?></strong></td>
+                              <td><?php print($row['marque'])?></td>
+                              <td>
+                                <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center"><?php print($row['modele'])?>
+                                </ul>
+                              </td>
+                              <?php if($_SESSION['role'] == 1 || $_SESSION['role'] == 2){?>
+                              <?php if($reservable == 0){
+                                      echo"<td><a href='javascript:CarBookable(".$id.")' class='btn btn-success btn-sm' role='button'><i class='bx bx-calendar-check me-1'></i> Réservable</a></td>";
+                                    }else{
+                                      echo"<td><a href='javascript:CarNonBookable(".$id.")' class='btn btn-danger btn-sm' role='button'><i class='bx bx-calendar-x me-1'></i> Non réservable</a></td>";
+                                    }
+                                  } 
+                              ?>
+                            </tr>
+                            <?php
+                              }
+                            ?>
+                          </tbody>
+                        </table>
+                      </div>
 
                       <?php
-                        if(isset($_POST['modify_vehicule_bookable'])){
+                        /*if(isset($_POST['modify_vehicule_bookable'])){
                             echo"<script>alert('".$_POST['resSelect']." ".$_POST['carSelect']."')</script>";
                             $modify_user = $connect->prepare('UPDATE VEHICULE SET reservable=? WHERE id=?')->execute([$_POST['resSelect'],$_POST['carSelect']]);
                             echo"<script>alert('Disponibilité de la voiture modifiée')</script>";
                             header('Location:vehicule_bookable');
-                        }
+                        }*/
                       ?>
-                    </div>
                     <script>
-                      function loadData(selectedValue) {
+                      /*function loadData(selectedValue) {
                         $.ajax({
                             url: "request_reservable.php",
                             type: "POST",
@@ -80,7 +94,6 @@
                       });
                     </script>
                   </div>
-                </div>
 
               <hr class="my-5" />
             <?php $content = ob_get_clean(); ?>

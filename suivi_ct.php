@@ -57,7 +57,7 @@
                         <th>Motorisation</th>
                         <th>date d'expiration le</th>
                         <th>date rdv</th>
-                        <?php if($_SESSION['role'] == 1 || $_SESSION['role'] == 2){?>
+                        <?php if($_SESSION['role'] != 0){?>
                         <th>valider</th>
                         <?php } ?>
                       </tr>
@@ -97,6 +97,7 @@
                             }
                           }                            
                             $today = date('Y-m-d');
+                            $weeksAfter = date('Y-m-d', strtotime('+14 days'));
                             //$today = $fakeDate;
                         
                             if ($rdv_taken == true && $date_rdv['date_rdv'] > $today) {
@@ -114,6 +115,11 @@
                                 $orange = false;
                                 $red = true;
                                 $vert = false;
+                            }elseif($row['ct_prochaine_date_ct'] <= $weeksAfter){
+                                $blue = false;
+                                $orange = true;
+                                $red = false;
+                                $vert = false;
                             }else{
                                 $blue = false;
                                 $orange = false;
@@ -122,7 +128,7 @@
                             }
                             
                       ?>
-                      <tr <?php if($red == true){?>class="table-danger"<?php }elseif($blue == true){?>class="table-info"<?php }elseif($vert == true){ ?>class="table-success"<?php } ?>>
+                      <tr <?php if($red == true){?>class="table-danger"<?php }elseif($blue == true){?>class="table-info"<?php }elseif($vert == true){ ?>class="table-success"<?php }elseif($orange == true){ ?>class="table-warning"<?php } ?>>
                         <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><?php print($row['vehicule_immatriculation']) ?></strong></td>
                         <td><?php print($row['vehicule_marque'])?></td>
                         <td>
@@ -131,11 +137,11 @@
                         </td>
                         <td><span class="badge bg-label-<?php if($row['vehicule_motorisation'] == 'Diesel'){print('warning');}elseif($row['vehicule_motorisation'] == 'Electrique'){print('info');}elseif($row['vehicule_motorisation'] == 'Hybride'){print('primary');}else{print('success');}?> me-1"><?php print($row['vehicule_motorisation']) ?></span></td>
                         <td><?php print($new_date_ct);?></td>
-                        <td><?php print($date_format) ?>
+                        <td><?php print($date_format) ?></td>
                         <?php if($_SESSION['role'] == 1 || $_SESSION['role'] == 2){?>
                         <td><?php if($rdv_taken == true && $date_rdv['date_rdv'] <= $today){ ?> 
                           <form method="POST" action="register_ct">    
-                              <button type="submit" class="btn p-0 dropdown-toggle hide-arrow" name="del_id" value="<?php print($row['vehicule_id']) ?>">
+                              <button type="submit" class='btn btn-success btn-sm' name="del_id" value="<?php print($row['vehicule_id']) ?>">
                                 <i class="bx bx-calendar-check me-1"></i> CT Effectué
                               </button>
                           </form><?php } ?>

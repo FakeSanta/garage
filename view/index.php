@@ -117,7 +117,7 @@
                   <h5 class="card-title text-primary">Contrôles techniques en approche : </h5>
                   <div class="table-responsive text-nowrap">
                     <?php
-                      $check_ct = $connect->prepare("SELECT * FROM VEHICULE, RDV, CT WHERE VEHICULE.id = CT.id_vehicule   AND VEHICULE.id = RDV.id_vehicule   AND rdv_pris = 0   AND rdv_annule = 0   AND prochaine_date_ct < DATE_ADD(CURDATE(), INTERVAL 60 DAY) ORDER BY date_ct ASC");
+                      $check_ct = $connect->prepare("SELECT * FROM VEHICULE, RDV, CT WHERE VEHICULE.id = CT.id_vehicule   AND VEHICULE.id = RDV.id_vehicule   AND rdv_pris = 0 AND prochaine_date_ct < DATE_ADD(CURDATE(), INTERVAL 60 DAY) GROUP BY VEHICULE.id ORDER BY prochaine_date_ct ASC");
                       $check_ct->execute();
                       if($check_ct->rowCount()){
                       

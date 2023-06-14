@@ -53,7 +53,7 @@
               </a>
             </li>
             <?php
-              if($_SESSION['role'] == 1 || $_SESSION['role'] == 2){
+              if($_SESSION['role'] != 0){
                 ?>
             <li class="menu-header small text-uppercase">
               <span class="menu-header-text">Admin</span>
@@ -109,7 +109,7 @@
               </a>
             </li>
             <?php
-              if($_SESSION['role'] == 1 || $_SESSION['role'] == 2){
+              if($_SESSION['role'] != 0){
                 ?>
             <li class="menu-item <?php if($page == "vehicule_bookable"){echo"active";} ?>">
               <a href="vehicule_bookable" class="menu-link">
@@ -155,7 +155,7 @@
               </a>
             </li>
             <?php
-              if($_SESSION['role'] == 1 || $_SESSION['role'] == 2){
+              if($_SESSION['role'] != 0){
             ?>
             <li class="menu-item <?php if($page == "add_vidange"){echo"active";} ?>">
               <a href="add_vidange" class="menu-link">
@@ -187,7 +187,7 @@
               </a>
             </li>
             <?php
-              if($_SESSION['role'] == 1 || $_SESSION['role'] == 2){
+              if($_SESSION['role'] != 0){
             ?>
             <li class="menu-item <?php if($page == "add_plein"){echo"active";} ?>">
               <a href="add_plein" class="menu-link">
@@ -210,7 +210,7 @@
               </a>
             </li>
             <?php
-              if($_SESSION['role'] == 1 || $_SESSION['role'] == 2){
+              if($_SESSION['role'] != 0){
             ?>
             <li class="menu-item <?php if($page == "add_stuff"){echo"active";} ?>">
               <a href="add_stuff" class="menu-link">

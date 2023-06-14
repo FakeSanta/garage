@@ -27,6 +27,18 @@ function rejectBooking(id){
 	swal({   title: "Êtes vous sûr ?",   text: "Refuser la réservation",   type: "info",   showCancelButton: true,   confirmButtonColor: "#ffca2c",   confirmButtonText: "Refuser",   cancelButtonText: "Revenir en arrière",   closeOnConfirm: false,   closeOnCancel: false }, function(isConfirm){   if (isConfirm) {    location.href='del_booking.php?id='+id;   } else {     swal("Annulé", "", "error");   } });
 }
 
+function DelRendezVous(id){
+	swal({   title: "Êtes vous sûr ?",   text: "Annuler le Rendez-vous",   type: "info",   showCancelButton: true,   confirmButtonColor: "#E6381A",   confirmButtonText: "Annuler RDV",   cancelButtonText: "Revenir en arrière",   closeOnConfirm: false,   closeOnCancel: false }, function(isConfirm){   if (isConfirm) {    location.href='del_rdv.php?id='+id;   } else {     swal("Annulé", "", "error");   } });
+}
+
+function CarNonBookable(id){
+	swal({   title: "Remiser ce véhicule des réservations",   text: "Remiser ce véhicule des réservations",   type: "warning",   showCancelButton: true,   confirmButtonColor: "#E6381A",   confirmButtonText: "Enlever des réservations",   cancelButtonText: "Revenir en arrière",   closeOnConfirm: false,   closeOnCancel: false }, function(isConfirm){   if (isConfirm) {    location.href='carBookable.php?id='+id;   } else {     swal("Annulé", "", "error");   } });
+}
+
+function CarBookable(id){
+	swal({   title: "Ajouter ce véhicule aux réservations",   text: "Ajouter ce véhicule aux réservations",   type: "info",   showCancelButton: true,   confirmButtonColor: "#E6381A",   confirmButtonText: "Ajouter aux réservations",   cancelButtonText: "Revenir en arrière",   closeOnConfirm: false,   closeOnCancel: false }, function(isConfirm){   if (isConfirm) {    location.href='carBookable.php?id='+id;   } else {     swal("Annulé", "", "error");   } });
+}
+
 function scrollNav() {
   $('.nav a').click(function(){  
     //Toggle Class
