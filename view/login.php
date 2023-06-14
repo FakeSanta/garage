@@ -34,6 +34,12 @@
     <script src="../assets/js/config.js"></script>
   </head>
   <body>
+
+  <!-- Ruban maintenance
+  <div class="alert alert-danger alert-dismissible" role="alert">
+    Site en maintenance ce vendredi de 22h à 00h 
+  </div>-->
+
     <div class="container-xxl">
       <div class="authentication-wrapper authentication-basic container-p-y">
         <div class="authentication-inner">

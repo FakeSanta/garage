@@ -34,8 +34,11 @@
     <script src="../assets/js/config.js"></script>
   </head>
   <body>
+  
     <div class="layout-wrapper layout-content-navbar">
+      
       <div class="layout-container">
+        
         <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
           <div class="app-brand demo" style="max-width: 100%;">
               <a href="index" class="app-brand-link">
@@ -229,7 +232,13 @@
             ?>
           </ul>
         </aside>
+        
         <div class="layout-page">
+        <!-- Ruban maintenance
+        <div class="alert alert-danger alert-dismissible" role="alert">
+          Site en maintenance ce vendredi de 22h à 00h 
+        </div>-->
+
         <nav
             class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
             id="layout-navbar"
