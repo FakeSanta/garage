@@ -117,7 +117,7 @@
                   <h5 class="card-title text-primary">Contrôles techniques en approche : </h5>
                   <div class="table-responsive text-nowrap">
                     <?php
-                      $check_ct = $connect->prepare("SELECT * FROM VEHICULE, RDV, CT WHERE VEHICULE.id = CT.id_vehicule   AND VEHICULE.id = RDV.id_vehicule   AND rdv_pris = 0 AND prochaine_date_ct < DATE_ADD(CURDATE(), INTERVAL 60 DAY) GROUP BY VEHICULE.id ORDER BY prochaine_date_ct ASC");
+                      $check_ct = $connect->prepare("SELECT * FROM VEHICULE, CT WHERE VEHICULE.id = CT.id_vehicule AND rdv_pris = 0 AND prochaine_date_ct < DATE_ADD(CURDATE(), INTERVAL 60 DAY) GROUP BY VEHICULE.id ORDER BY prochaine_date_ct ASC");
                       $check_ct->execute();
                       if($check_ct->rowCount()){
                       
@@ -141,16 +141,16 @@
                               $count_days_query->execute();
                               $days_diff = $count_days_query->fetch(PDO::FETCH_ASSOC);
                               if($days_diff['diff_date'] > 0){
-                            
+                                $id = $row['id_vehicule'];
                         ?>
                         <tr <?php if($days_diff['diff_date'] <= 14){?>class="table-warning"<?php }?>>
-                          <form method="POST" action="register_rdv">    
+                          <form method="POST" action="register_rdv.php?id=<?php echo $id; ?>">    
                             <td><i class="fab fa-angular fa-lg text-danger me-3"></i><?php print("<b>".$days_diff['diff_date']." jours</b> restant pour le contrôle technique de :") ?></td>
                             <td><b><?php print($row['modele']."</b> | ".$row['immatriculation']) ?></td>
                             <?php if($_SESSION['role'] != 0){?>
                             <td>
                               <button type="submit" class="btn p-0 dropdown-toggle hide-arrow" name="register_rdv" value="<?php print($row['id_vehicule']) ?>">
-                                <i class="bx bx-calendar me-1" id="<?php print($row['immatriculation']) ?>"></i> RDV
+                                <i class="bx bx-calendar me-1" id="<?php print($row['immatriculation']) ?>"></i><?php echo $id;?> RDV
                               </button>
                             </td>
                             <?php } ?>
@@ -158,15 +158,16 @@
                         </tr>
                         <?php
                               }elseif($days_diff['diff_date'] <=0){
+                                $id = $row['id_vehicule'];
                                 ?>
                                   <tr class="table-danger">
-                                    <form method="POST" action="register_rdv">    
+                                    <form method="POST" action="register_rdv.php?id=<?php echo $id; ?>">    
                                       <td><i class="fab fa-angular fa-lg text-danger me-3"></i><?php print("Contrôle technique périmé de <b>".abs($days_diff['diff_date'])." jours </b>pour :") ?></td>
                                       <td><b><?php print($row['modele']."</b> | ".$row['immatriculation']) ?></td>
                                       <?php if($_SESSION['role'] != 0){?>
                                       <td>
                                         <button type="submit" class="btn p-0 dropdown-toggle hide-arrow" name="register_rdv" value="<?php print($id_vehicule) ?>">
-                                          <i class="bx bx-calendar me-1" id="<?php print($row['immatriculation']) ?>"></i> RDV
+                                          <i class="bx bx-calendar me-1" id="<?php print($row['immatriculation']) ?>"></i><?php echo $id;?> RDV
                                         </button>
                                       </td>
                                       <?php } ?>
