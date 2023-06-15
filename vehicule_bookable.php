@@ -23,6 +23,7 @@
                                 <th>Immatriculation</th>
                                 <th>Marque</th>
                                 <th>Modèle</th>
+                                <th>Disponible à la réservation</th>
                                 <?php if($_SESSION['role'] != 0){?>
                                 <th>Réservable</th>
                                 <?php } ?>
@@ -37,13 +38,14 @@
                               $reservable = $row['reservable'];
                               $id = $row['id'];
                           ?>
-                            <tr <?php if($reservable == 1){?>class="table-danger"<?php }else{?>class="table-success"<?php }?>>
+                            <tr <?php if($reservable == 0){?>class="table-danger"<?php }else{?>class="table-success"<?php }?>>
                               <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><?php print($row['immatriculation']) ?></strong></td>
                               <td><?php print($row['marque'])?></td>
                               <td>
                                 <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center"><?php print($row['modele'])?>
                                 </ul>
                               </td>
+                              <td><strong><?php if($reservable == 1){print("Oui");}else{print("Non");}?></strong></td>
                               <?php if($_SESSION['role'] == 1 || $_SESSION['role'] == 2){?>
                               <?php if($reservable == 0){
                                       echo"<td><a href='javascript:CarBookable(".$id.")' class='btn btn-success btn-sm' role='button'><i class='bx bx-calendar-check me-1'></i> Réservable</a></td>";
