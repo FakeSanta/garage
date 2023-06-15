@@ -54,7 +54,7 @@
             </div>
           </nav>
           <?php
-            $id_vehicule = $_POST['register_rdv'];
+            $id_vehicule = $_GET['id'];
             $check_ct = $connect->prepare("SELECT * FROM VEHICULE INNER JOIN CT ON VEHICULE.id = CT.id_vehicule AND VEHICULE.id = :id ORDER BY date_ct ASC");
             $check_ct->execute(['id' => $id_vehicule]);
             $result = $check_ct->fetch(PDO::FETCH_ASSOC);
