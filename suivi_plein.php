@@ -21,7 +21,7 @@
                     <div class="d-flex flex-sm-column flex-row align-items-start justify-content-between">
                       <div class="card-title">
                         <h5 class="text-nowrap mb-2">Dépense en carburant</h5>
-                        <span class="badge bg-label-warning rounded-pill">Année <?php echo date('Y')?></span>
+                        <span class="badge bg-label-info rounded-pill">Année <?php echo date('Y')?></span>
                       </div>
                       <?php
                         $sql_N = $connect->prepare("SELECT SUM(cout_plein) AS total_cout_annee_en_cours FROM CARBURANT WHERE YEAR(date_plein) = YEAR(CURDATE())");
@@ -40,7 +40,7 @@
                       ?>
                       <div class="mt-sm-auto">
                         <small class="text-<?php if($value_N > $tempo['total_cout_annee_precedente']){ print('danger');}else{print('success');}?> text-nowrap fw-semibold"
-                          ><i class="bx bx-chevron-<?php if($value_N > $tempo['total_cout_annee_precedente']){ print('up');}else{print('down');}?>"></i><?php if($value_N > $tempo['total_cout_annee_precedente']){ print('+');}else{print('-');}?> <?php echo str_replace('.',',',$tempo['difference_cout'])?> € (différence avec N-1 à la même date)</small
+                          ><i class="bx bx-chevron-<?php if($value_N > $tempo['total_cout_annee_precedente']){ print('up');}else{print('down');}?>"></i><?php if($value_N > $tempo['total_cout_annee_precedente']){ print('+');}else{print('');}?> <?php echo str_replace('.',',',$tempo['difference_cout'])?> € (différence avec N-1 à la même date)</small
                         >
                         <h3 class="mb-0"><?php echo str_replace('.',',',$value_N)?> €</h3>
                       </div>
