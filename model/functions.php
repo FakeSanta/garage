@@ -40,12 +40,12 @@ function checkCarExist($immat){
 
 function insertCarWithKm($immat, $marque, $modele, $motorisation,$kilometrage, $utilitaire){
     $connectdb = dbConnect();
-    $insert = $connectdb->prepare('INSERT INTO VEHICULE (immatriculation, marque, modele, motorisation, kilometrage, utilitaire, rdv_pris) VALUES (?,?,?,?,?,?,0)')->execute([$immat, $marque, $modele, $motorisation, $kilometrage, $utilitaire]);
+    $insert = $connectdb->prepare('INSERT INTO VEHICULE (immatriculation, marque, modele, motorisation, kilometrage, utilitaire, rdv_pris, reservable) VALUES (?,?,?,?,?,?,0,0)')->execute([$immat, $marque, $modele, $motorisation, $kilometrage, $utilitaire]);
 }
 
 function insertCarKm($immat, $marque, $modele, $motorisation, $utilitaire){
     $connectdb = dbConnect();
-    $insert = $connectdb->prepare('INSERT INTO VEHICULE (immatriculation, marque, modele, motorisation, utilitaire, rdv_pris) VALUES (?,?,?,?,?, 0)')->execute([$immat, $marque, $modele, $motorisation, $utilitaire]);
+    $insert = $connectdb->prepare('INSERT INTO VEHICULE (immatriculation, marque, modele, motorisation, utilitaire, rdv_pris, reservable) VALUES (?,?,?,?,?, 0,0)')->execute([$immat, $marque, $modele, $motorisation, $utilitaire]);
 }
 
 function checkLogin($login,$password){
