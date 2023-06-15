@@ -5,7 +5,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-function sendMail($email, $reset_token){
+function sendMail($email, $reset_token,$brend){
     require '/var/www/html/vendor/phpmailer/phpmailer/src/Exception.php';
     require '/var/www/html/vendor/phpmailer/phpmailer/src/PHPMailer.php';
     require '/var/www/html/vendor/phpmailer/phpmailer/src/SMTP.php';
@@ -46,7 +46,7 @@ if(isset($_POST['send_link'])){
     
         $update = $connect->prepare("UPDATE USER SET resettoken = ?, resettokenexp = ? WHERE mail = ?");
         $update->execute([$reset_token, $date, $email]);
-        if(sendMail($email, $reset_token) === TRUE){
+        if(sendMail($email, $reset_token,$brend) === TRUE){
             echo "
             <script>
                 alert('Password reset link send to mail.');
