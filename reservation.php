@@ -490,7 +490,7 @@ error_reporting(E_ALL);
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-12">                   
-						<p class="copyright text-muted small">Copyright &copy; Web Solution Info <?php echo date('Y')?>. Tous Droits Réservés</p>
+						<p class="copyright text-muted small">Copyright &copy; <strong>Web Solution Info</strong> <?php echo date('Y')?>. Tous Droits Réservés</p>
 					</div>
 				</div>
 			</div>
