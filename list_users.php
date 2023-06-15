@@ -51,7 +51,7 @@
                                     elseif($row['role'] == 4){
                                       ?><span class="badge bg-label-primary me-1"><?php
                                     }?><?php 
-                                  if($row['role'] == 0){print("Consultant");} if($row['role'] == 1){print("Administrateur");}if($row['role'] == 2){print("Chef des travaux");}if($row['role'] == 4){print("Créateur");}?></span></td>
+                                  if($row['role'] == 0){print("Consultant");} if($row['role'] == 1){print("Administrateur");}if($row['role'] == 2){print("Chef des travaux");}if($row['role'] == 4){print("⚔️Créateur⚔️");}?></span></td>
                         <td><?php print($row['mail'])?></td>
                       </tr>
                       <?php

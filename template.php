@@ -41,7 +41,7 @@
         
         <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
           <div class="app-brand demo" style="max-width: 100%;">
-              <a href="index" class="app-brand-link">
+              <a href="./" class="app-brand-link">
                   <span class="app-brand-text demo menu-text fw-bolder ms-2" style="word-break: break-all;">
                       auto-<?php echo $brend ?>
                   </span>
@@ -146,7 +146,7 @@
             </li>
             <li class="menu-item <?php if($page == "list_rdv"){echo"active";} ?>">
               <a href="list_rdv" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-folder-open"></i>
+                <i class="menu-icon tf-icons bx bx-calendar-event"></i>
                 <div data-i18n="Tables">Liste des RDV</div>
               </a>
             </li>
@@ -172,13 +172,13 @@
             </li>
             <li class="menu-item <?php if($page == "report-incident"){echo"active";} ?>">
               <a href="report-incident" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-table"></i>
+                <i class="menu-icon tf-icons bx bx-chat"></i>
                 <div data-i18n="Tables">Rapport d'incident</div>
               </a>
             </li>
             <li class="menu-item <?php if($page == "suivi-incident"){echo"active";} ?>">
               <a href="suivi-incident" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-table"></i>
+                <i class="menu-icon tf-icons bx bx-book-bookmark"></i>
                 <div data-i18n="Tables">Suivi des incidents</div>
               </a>
             </li>

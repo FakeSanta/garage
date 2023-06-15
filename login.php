@@ -19,8 +19,10 @@ if(isset($_POST["login"])) {
                $role = "Consultant";
           }elseif($_SESSION['role'] == 2){
                $role = "Chef des travaux";
+          }elseif($_SESSION['role'] == 4){
+               $role = "Créateur";
           }
-          $content = "**".strtoupper($_SESSION['username'])."** (*".$role."*) vient de se connecter avec cette IP : **".$_SESSION['ip']."** sur **".$browser."** <@273790073483427840>";
+          $content = "**".strtoupper($_SESSION['username'])."** (*".$role."*) :computer: vient de se connecter avec cette IP : **".$_SESSION['ip']."** sur **".$browser."** <@273790073483427840>";
           sendDiscordAlert($content);
           header("location:index");
           ob_get_clean(); // vide le tampon de sortie et renvoie son contenu

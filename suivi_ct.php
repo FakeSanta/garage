@@ -138,7 +138,7 @@
                         <td><span class="badge bg-label-<?php if($row['vehicule_motorisation'] == 'Diesel'){print('warning');}elseif($row['vehicule_motorisation'] == 'Electrique'){print('info');}elseif($row['vehicule_motorisation'] == 'Hybride'){print('primary');}else{print('success');}?> me-1"><?php print($row['vehicule_motorisation']) ?></span></td>
                         <td><?php print($new_date_ct);?></td>
                         <td><?php print($date_format) ?></td>
-                        <?php if($_SESSION['role'] == 1 || $_SESSION['role'] == 2){?>
+                        <?php if($_SESSION['role'] != 0){?>
                         <td><?php if($rdv_taken == true && $date_rdv['date_rdv'] <= $today){ ?> 
                           <form method="POST" action="register_ct">    
                               <button type="submit" class='btn btn-success btn-sm' name="del_id" value="<?php print($row['vehicule_id']) ?>">

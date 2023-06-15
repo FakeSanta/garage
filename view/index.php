@@ -19,7 +19,7 @@
                 <div class="card-body">
                   <h5 class="card-title text-primary">Bonjour, <span class="fw-bold"><?php print(ucfirst($_SESSION['username']))?></span></h5>
                   <p class="mb-4">
-                    Vous êtes connecté en tant que <span class="fw-bold"><?php if($_SESSION['role'] == 1){print('Administrateur');}elseif($_SESSION['role'] == 0){print('Consultant');}elseif($_SESSION['role'] == 2){print('Chef des travaux');}elseif($_SESSION['role'] == 4){print("Créateur");}?></span>
+                    Vous êtes connecté en tant que <span class="fw-bold"><?php if($_SESSION['role'] == 1){print('Administrateur');}elseif($_SESSION['role'] == 0){print('Consultant');}elseif($_SESSION['role'] == 2){print('Chef des travaux');}elseif($_SESSION['role'] == 4){print("⚔️Créateur⚔️");}?></span>
                   </p>
                 </div>
               </div>

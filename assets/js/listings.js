@@ -17,7 +17,7 @@ function EliminaEvento(id){
 	
 }
 
-function EliminaTipo(id){
+function acceptBooking(id){
 
 	swal({   title: "Êtes vous sûr ?",   text: "Valider la réservation",   type: "info",   showCancelButton: true,   confirmButtonColor: "#157447",   confirmButtonText: "Oui, valider",   cancelButtonText: "Non, annuler",   closeOnConfirm: false,   closeOnCancel: false }, function(isConfirm){   if (isConfirm) {    location.href='valide_booking.php?id='+id;   } else {     swal("Annulé", "", "error");   } });
 	

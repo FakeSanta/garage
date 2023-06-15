@@ -60,7 +60,7 @@ error_reporting(E_ALL);
 		<!-- Navigation -->
 		<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-black ">
 		  <div class="container topnav">
-			<a class="navbar-brand" href="index"><h1><i class="fa fa-calendar" aria-hidden="true"></i> Réservation <?php echo $brend ?></h1></a>
+			<a class="navbar-brand" href="./"><h1><i class="fa fa-calendar" aria-hidden="true"></i> Réservation <?php echo $brend ?></h1></a>
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 			  <span class="navbar-toggler-icon"></span>
 			</button>
@@ -264,7 +264,7 @@ error_reporting(E_ALL);
 								</div>
 							</div>														
 							<?php
-								if($_SESSION['role'] == 1 || $_SESSION['role'] == 2){
+								if($_SESSION['role'] != 0){
 							?>
 							<!-- Button trigger Delete Event modal -->
 							<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editevent">

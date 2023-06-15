@@ -493,7 +493,7 @@ function listAllEventsEdit()
 
 function convertDate($date){
 	$dateTime = strtotime($date) ;
-	$newdate = strftime('%d %B %Y %H:%M',$dateTime);
+	$newdate = strftime('%d %B %Y à %H:%M',$dateTime);
 	$newdate = str_replace( 
 		array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
 		array('Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'),
@@ -552,7 +552,7 @@ function listAllWaitingIndex(){
 				echo"<td>". $start."</td>";
 				echo"<td>". $end."</td>";
 				echo"<td>". $row['user_username']."</td>";
-				echo"<td><a href='javascript:EliminaTipo(".$id.")'class='btn btn-success btn-sm' role='button'><i class='fa fa-fw fa-trash'></i> Valider</a></td>";
+				echo"<td><a href='javascript:acceptBooking(".$id.")'class='btn btn-success btn-sm' role='button'><i class='fa fa-fw fa-trash'></i> Valider</a></td>";
 				echo"<td><a href='javascript:rejectBooking(".$id.")'class='btn btn-warning btn-sm' role='button'><i class='fa fa-fw fa-trash'></i> Refuser</a></td>";
 			echo"</tr>";
 		}
@@ -636,7 +636,7 @@ ORDER BY reservation_start ASC");
 			echo $row['user_username'];
 			echo "</td>";		
 			echo "<td class='r'>			
-			<a href='javascript:EliminaTipo(". $row['reservation_id'] . ")'class='btn btn-success btn-sm' role='button'><i class='fa fa-fw fa-check'></i> Valider</a></td>";
+			<a href='javascript:acceptBooking(". $row['reservation_id'] . ")'class='btn btn-success btn-sm' role='button'><i class='fa fa-fw fa-check'></i> Valider</a></td>";
 			echo "<td class='r'>			
 			<a href='javascript:rejectBooking(". $row['reservation_id'] . ")'class='btn btn-warning btn-sm' role='button'><i class='fa fa-fw fa-trash'></i> Refuser</a></td>";
 			echo "</tr>"; 	
