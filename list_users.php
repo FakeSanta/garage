@@ -19,7 +19,11 @@
                 <div class="table-responsive text-nowrap">
                   <?php
                       #$sql = $connect->prepare("SELECT * FROM VEHICULE, VIDANGE, CT WHERE VEHICULE.id = VIDANGE.id_vehicule AND VEHICULE.id = CT.id_vehicule");
-                      $sql = $connect->prepare("SELECT * FROM USER EXCEPT SELECT * FROM USER WHERE username ='superviseur'");
+                      if($_SESSION['role'] == 4){
+                        $sql = $connect->prepare("SELECT * FROM USER ORDER BY role DESC");
+                      }else{
+                        $sql = $connect->prepare("SELECT * FROM USER EXCEPT SELECT * FROM USER WHERE username='superviseur' ORDER BY role DESC");
+                      }
                       $sql->execute();
                     
                       if($sql->rowCount()) {
@@ -28,7 +32,6 @@
                   <table class="table">
                     <thead>
                       <tr>
-                        <th>N°</th>
                         <th>Identifiant</th>
                         <th>Rôle</th>
                         <th>Mail</th>
@@ -41,10 +44,14 @@
                         while($row = $sql->fetch(PDO::FETCH_ASSOC))
                         {
                       ?>
-                      <tr>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><?php print($row['id']) ?></strong></td>
-                        <td><?php print($row['username'])?></td>
-                        <td><?php if($row['role'] == 1 || $row['role'] == 2){?><span class="badge bg-label-danger me-1"><?php }?><?php if($row['role'] == 0){print("Consultant");} if($row['role'] == 1){print("Administrateur");}if($row['role'] == 2){print("Chef des travaux");}?></span></td>
+                      <tr <?php if($row['role'] == 4){?>class="table-primary" <?php }?>>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><?php print($row['username']) ?></strong></td>
+                        <td><?php if($row['role'] == 1 || $row['role'] == 2)
+                                    {?><span class="badge bg-label-danger me-1"><?php }
+                                    elseif($row['role'] == 4){
+                                      ?><span class="badge bg-label-primary me-1"><?php
+                                    }?><?php 
+                                  if($row['role'] == 0){print("Consultant");} if($row['role'] == 1){print("Administrateur");}if($row['role'] == 2){print("Chef des travaux");}if($row['role'] == 4){print("Créateur");}?></span></td>
                         <td><?php print($row['mail'])?></td>
                       </tr>
                       <?php

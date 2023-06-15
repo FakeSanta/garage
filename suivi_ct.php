@@ -96,9 +96,9 @@
                               );
                             }
                           }                            
-                            //$today = date('Y-m-d');
+                            $today = date('Y-m-d');
                             $weeksAfter = date('Y-m-d', strtotime('+14 days'));
-                            $today = $fakeDate;
+                            //$today = $fakeDate;
                         
                             if ($rdv_taken == true && $date_rdv['date_rdv'] > $today) {
                                 $blue = true;

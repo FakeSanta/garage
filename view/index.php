@@ -19,7 +19,7 @@
                 <div class="card-body">
                   <h5 class="card-title text-primary">Bonjour, <span class="fw-bold"><?php print(ucfirst($_SESSION['username']))?></span></h5>
                   <p class="mb-4">
-                    Vous êtes connecté en tant que <span class="fw-bold"><?php if($_SESSION['role'] == 1){print('Administrateur');}elseif($_SESSION['role'] == 0){print('Consultant');}elseif($_SESSION['role'] == 2){print('Chef des travaux');}?></span>
+                    Vous êtes connecté en tant que <span class="fw-bold"><?php if($_SESSION['role'] == 1){print('Administrateur');}elseif($_SESSION['role'] == 0){print('Consultant');}elseif($_SESSION['role'] == 2){print('Chef des travaux');}elseif($_SESSION['role'] == 4){print("Créateur");}?></span>
                   </p>
                 </div>
               </div>
@@ -150,7 +150,7 @@
                             <?php if($_SESSION['role'] != 0){?>
                             <td>
                               <button type="submit" class="btn p-0 dropdown-toggle hide-arrow" name="register_rdv" value="<?php print($row['id_vehicule']) ?>">
-                                <i class="bx bx-calendar me-1" id="<?php print($row['immatriculation']) ?>"></i><?php echo $id;?> RDV
+                                <i class="bx bx-calendar me-1" id="<?php print($row['immatriculation']) ?>"></i> RDV
                               </button>
                             </td>
                             <?php } ?>
@@ -167,7 +167,7 @@
                                       <?php if($_SESSION['role'] != 0){?>
                                       <td>
                                         <button type="submit" class="btn p-0 dropdown-toggle hide-arrow" name="register_rdv" value="<?php print($id_vehicule) ?>">
-                                          <i class="bx bx-calendar me-1" id="<?php print($row['immatriculation']) ?>"></i><?php echo $id;?> RDV
+                                          <i class="bx bx-calendar me-1" id="<?php print($row['immatriculation']) ?>"></i> RDV
                                         </button>
                                       </td>
                                       <?php } ?>

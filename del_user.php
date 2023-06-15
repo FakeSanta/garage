@@ -24,7 +24,7 @@
                           <label for="userSelect" class="form-label">utilisateur |  Role</label>
                           <select class="form-select" name="userSelect">
                           <?php
-                            $fill_select = $connect->prepare('SELECT * FROM USER WHERE id != :id ORDER BY username ASC');
+                            $fill_select = $connect->prepare('SELECT * FROM USER WHERE id != :id EXCEPT SELECT * FROM USER WHERE username ="superviseur" ORDER BY username ASC');
                             $fill_select->execute(array('id' => $_SESSION['id']));
                             while($row = $fill_select->fetch(PDO::FETCH_ASSOC))
                             {

@@ -120,107 +120,107 @@
                         </div>
                         </form>
                         <?php
-    if(isset($_POST['add_ct']))
-    {
-        $commentaire = $_POST['commentaire'];
-        $immatriculation = $_POST['immat'];
-        $check = $connect->prepare("SELECT id, marque, modele FROM VEHICULE WHERE immatriculation = :immatriculation");
-        $check->execute(['immatriculation' => $immatriculation]);
-        $vehicule = $check->fetch(PDO::FETCH_ASSOC);        
-        if($vehicule)
-        {
-            $id_tuture = $vehicule['id'];
-            $query2 = $connect->prepare('SELECT * FROM VEHICULE 
-                                         INNER JOIN CT ON VEHICULE.id = CT.id_vehicule
-                                         INNER JOIN RDV ON VEHICULE.id = RDV.id_vehicule
-                                         WHERE VEHICULE.id = :id
-                                         AND RDV.rdv_annule = 0
-                                         ORDER BY prochaine_date_ct ASC');
-            $query2->execute(array('id' => $id_tuture));
-            $result2 = $query2->fetch(PDO::FETCH_ASSOC);
-            if($result2 && $result2['utilitaire'] == 1) {
-                $connect->beginTransaction();  
-                try {
-                    $updateVehicule = $connect->prepare('UPDATE VEHICULE
-                                                        SET rdv_pris = 0
-                                                        WHERE id = :id');
-                    $updateVehicule->execute(array('id' => $id_tuture));                    
-                    $updateRdv = $connect->prepare('UPDATE RDV
-                                                    SET rdv_effectue = 1
-                                                    WHERE id_vehicule = :id');
-                    $updateRdv->execute(array('id' => $id_tuture));
-                    $updateCT = $connect->prepare('UPDATE CT
-                                                SET date_ct = (
-                                                    SELECT date_rdv
-                                                    FROM RDV
-                                                    WHERE id_vehicule = :id
-                                                    AND rdv_annule = 0
-                                                ),
-                                                prochaine_date_ct = (
-                                                    SELECT DATE_ADD(date_rdv, INTERVAL 1 YEAR)
-                                                    FROM RDV
-                                                    WHERE id_vehicule = :id
-                                                    AND rdv_annule = 0
-                                                )
-                                                WHERE id_vehicule = :id');
-                    $updateCT->execute(array('id' => $id_tuture));
-                    $insert_histo = $connect->prepare('INSERT INTO HISTORIQUE (id_vehicule, type_operation, date_ct, commentaire) VALUES (?,?,?,?)');
-                    $insert_histo->execute([$id_tuture, $type_ope, $result2['date_rdv'], $commentaire]);
-                    $connect->commit();
-                    header('Location: suivi_ct');
-                    exit();
-                } catch (Exception $e) {
-                    $connect->rollback();
-                    echo 'Erreur : ' . $e->getMessage();
-                }
-            } else {
-                $connect->beginTransaction();
-                try {
-                    $updateVehicule = $connect->prepare('UPDATE VEHICULE
-                                                        SET rdv_pris = 0
-                                                        WHERE id = :id');
-                    $updateVehicule->execute(array('id' => $id_tuture));
-                    $updateRdv = $connect->prepare('UPDATE RDV
-                                                    SET rdv_effectue = 1
-                                                    WHERE id_vehicule = :id');
-                    $updateRdv->execute(array('id' => $id_tuture));
-                    $updateCT = $connect->prepare('UPDATE CT
-                                                SET date_ct = (
-                                                    SELECT date_rdv
-                                                    FROM RDV
-                                                    WHERE id_vehicule = :id
-                                                    AND rdv_annule = 0
-                                                ),
-                                                prochaine_date_ct = (
-                                                    SELECT DATE_ADD(date_rdv, INTERVAL 2 YEAR)
-                                                    FROM RDV
-                                                    WHERE id_vehicule = :id
-                                                    AND rdv_annule = 0
-                                                )
-                                                WHERE id_vehicule = :id');
-                    $updateCT->execute(array('id' => $id_tuture));
-                    $insert_histo = $connect->prepare('INSERT INTO HISTORIQUE (id_vehicule, type_operation, date_ct, commentaire) VALUES (?,?,?,?)');
-                    $insert_histo->execute([$id_tuture, $type_ope, $result2['date_rdv'], $commentaire]);
-                    $contentDiscord = "**".strtoupper($_SESSION['username'])."** - Contrôle technique validé pour **".$vehicule['immatriculation']."** ".$vehicule['marque']." ".$vehicule['modele'];
-                    sendDiscordAlert($contentDiscord);
-                    $connect->commit();
-                    header('Location: suivi_ct');
-                    exit();
-                } catch (Exception $e) {
-                    $connect->rollback();
-                    echo 'Erreur : ' . $e->getMessage();
-                }
-            }
-        }
-    }
-    elseif(isset($_POST['contre_visite'])){
-        $check = $connect->prepare("SELECT * FROM VEHICULE WHERE immatriculation = :immatriculation");
-        $check->execute(['immatriculation' => $_POST['immat']]);
-        $_SESSION['voiture'] = $check->fetch(PDO::FETCH_ASSOC);
-        header('Location: contre-visite');
-        exit();
-    }
-?>
+                          if(isset($_POST['add_ct']))
+                          {
+                              $commentaire = $_POST['commentaire'];
+                              $immatriculation = $_POST['immat'];
+                              $check = $connect->prepare("SELECT id, marque, modele FROM VEHICULE WHERE immatriculation = :immatriculation");
+                              $check->execute(['immatriculation' => $immatriculation]);
+                              $vehicule = $check->fetch(PDO::FETCH_ASSOC);        
+                              if($vehicule)
+                              {
+                                  $id_tuture = $vehicule['id'];
+                                  $query2 = $connect->prepare('SELECT * FROM VEHICULE 
+                                                              INNER JOIN CT ON VEHICULE.id = CT.id_vehicule
+                                                              INNER JOIN RDV ON VEHICULE.id = RDV.id_vehicule
+                                                              WHERE VEHICULE.id = :id
+                                                              AND RDV.rdv_annule = 0
+                                                              ORDER BY prochaine_date_ct ASC');
+                                  $query2->execute(array('id' => $id_tuture));
+                                  $result2 = $query2->fetch(PDO::FETCH_ASSOC);
+                                  if($result2 && $result2['utilitaire'] == 1) {
+                                      $connect->beginTransaction();  
+                                      try {
+                                          $updateVehicule = $connect->prepare('UPDATE VEHICULE
+                                                                              SET rdv_pris = 0
+                                                                              WHERE id = :id');
+                                          $updateVehicule->execute(array('id' => $id_tuture));                    
+                                          $updateRdv = $connect->prepare('UPDATE RDV
+                                                                          SET rdv_effectue = 1
+                                                                          WHERE id_vehicule = :id');
+                                          $updateRdv->execute(array('id' => $id_tuture));
+                                          $updateCT = $connect->prepare('UPDATE CT
+                                                                      SET date_ct = (
+                                                                          SELECT date_rdv
+                                                                          FROM RDV
+                                                                          WHERE id_vehicule = :id
+                                                                          AND rdv_annule = 0
+                                                                      ),
+                                                                      prochaine_date_ct = (
+                                                                          SELECT DATE_ADD(date_rdv, INTERVAL 1 YEAR)
+                                                                          FROM RDV
+                                                                          WHERE id_vehicule = :id
+                                                                          AND rdv_annule = 0
+                                                                      )
+                                                                      WHERE id_vehicule = :id');
+                                          $updateCT->execute(array('id' => $id_tuture));
+                                          $insert_histo = $connect->prepare('INSERT INTO HISTORIQUE (id_vehicule, type_operation, date_ct, commentaire) VALUES (?,?,?,?)');
+                                          $insert_histo->execute([$id_tuture, $type_ope, $result2['date_rdv'], $commentaire]);
+                                          $connect->commit();
+                                          header('Location: suivi_ct');
+                                          exit();
+                                      } catch (Exception $e) {
+                                          $connect->rollback();
+                                          echo 'Erreur : ' . $e->getMessage();
+                                      }
+                                  } else {
+                                      $connect->beginTransaction();
+                                      try {
+                                          $updateVehicule = $connect->prepare('UPDATE VEHICULE
+                                                                              SET rdv_pris = 0
+                                                                              WHERE id = :id');
+                                          $updateVehicule->execute(array('id' => $id_tuture));
+                                          $updateRdv = $connect->prepare('UPDATE RDV
+                                                                          SET rdv_effectue = 1
+                                                                          WHERE id_vehicule = :id');
+                                          $updateRdv->execute(array('id' => $id_tuture));
+                                          $updateCT = $connect->prepare('UPDATE CT
+                                                                      SET date_ct = (
+                                                                          SELECT date_rdv
+                                                                          FROM RDV
+                                                                          WHERE id_vehicule = :id
+                                                                          AND rdv_annule = 0
+                                                                      ),
+                                                                      prochaine_date_ct = (
+                                                                          SELECT DATE_ADD(date_rdv, INTERVAL 2 YEAR)
+                                                                          FROM RDV
+                                                                          WHERE id_vehicule = :id
+                                                                          AND rdv_annule = 0
+                                                                      )
+                                                                      WHERE id_vehicule = :id');
+                                          $updateCT->execute(array('id' => $id_tuture));
+                                          $insert_histo = $connect->prepare('INSERT INTO HISTORIQUE (id_vehicule, type_operation, date_ct, commentaire) VALUES (?,?,?,?)');
+                                          $insert_histo->execute([$id_tuture, $type_ope, $result2['date_rdv'], $commentaire]);
+                                          $contentDiscord = "**".strtoupper($_SESSION['username'])."** - Contrôle technique validé pour **".$immatriculation."** ".$vehicule['marque']." ".$vehicule['modele'];
+                                          sendDiscordAlert($contentDiscord);
+                                          $connect->commit();
+                                          header('Location: suivi_ct');
+                                          exit();
+                                      } catch (Exception $e) {
+                                          $connect->rollback();
+                                          echo 'Erreur : ' . $e->getMessage();
+                                      }
+                                  }
+                              }
+                          }
+                          elseif(isset($_POST['contre_visite'])){
+                              $check = $connect->prepare("SELECT * FROM VEHICULE WHERE immatriculation = :immatriculation");
+                              $check->execute(['immatriculation' => $_POST['immat']]);
+                              $_SESSION['voiture'] = $check->fetch(PDO::FETCH_ASSOC);
+                              header('Location: contre-visite');
+                              exit();
+                          }
+                      ?>
                     </div>
                   </div>
                 </div>
