@@ -12,7 +12,6 @@ if(isset($_POST["login"])) {
           $_SESSION['role'] = $info['role'];
           $_SESSION['id'] = $info['id'];
           $_SESSION ['ip'] = $_SERVER['REMOTE_ADDR'];
-          $browser = getBrowser();
           if($_SESSION['role'] == 1){
                $role = "Administrateur";
           }elseif($_SESSION['role'] == 0){
@@ -22,8 +21,9 @@ if(isset($_POST["login"])) {
           }elseif($_SESSION['role'] == 4){
                $role = "Créateur";
           }
-          $content = "**".strtoupper($_SESSION['username'])."** (*".$role."*) :computer: vient de se connecter avec cette IP : **".$_SESSION['ip']."** sur **".$browser."** <@273790073483427840>";
-          sendDiscordAlert($content);
+          $content = "**".strtoupper($_SESSION['username'])."** (*".$role."*) :computer: vient de se connecter !";
+          $color = "6495ed";
+          sendDiscordAlert($content,$color);
           header("location:index");
           ob_get_clean(); // vide le tampon de sortie et renvoie son contenu
           exit();

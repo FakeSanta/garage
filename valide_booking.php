@@ -32,7 +32,9 @@ $end = str_replace(
     $end
 );
 
-
+$contentDiscord ="**".strtoupper($_SESSION['username'])."** - Réservation validée pour ".$user['modele']." ".$user['marque']." | ".$user['immatriculation']." du ".$start." au ".$end;
+$color="008020";
+sendDiscordAlert($contentDiscord,$color);
 $mail = new PHPMailer();
 $mail->CharSet = "UTF-8";
 $mail->IsSMTP();
@@ -47,8 +49,8 @@ $mail->Username   = "supervision.decomble@gmail.com";
 $mail->Password   = "rvnqrxyankxtuegm";
 $mail->AddAddress($user['mail'],"Auto ".$brend);
 $mail->SetFrom("supervision.decomble@gmail.com", "Auto ".$brend);
-$mail->Subject = "Reservation validee pour ".$user['modele']." ".$user['marque']." | ".$user['immatriculation']." du ".$start." au ".$end;
-$content = "Reservation validee pour ".$user['modele']." ".$user['marque']." | ".$user['immatriculation']." du ".$start." au ".$end;
+$mail->Subject = "Réservation validée pour ".$user['modele']." ".$user['marque']." | ".$user['immatriculation']." du ".$start." au ".$end;
+$content = "Réservation validée pour ".$user['modele']." ".$user['marque']." | ".$user['immatriculation']." du ".$start." au ".$end;
 $mail->MsgHTML($content); 
 if(!$mail->Send()) {
     echo "Error while sending Email.";

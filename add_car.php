@@ -25,9 +25,10 @@
                 if(checkCarExist($immat) === true) {
                 }
                 else{
+                    $color ="008020";
                     if(empty($_POST['kilometrage'])){
                         $content = "**".strtoupper($_SESSION['username'])."** - Véhicule créé ➡️ **".$immat."** *".$marque."* **".$modele."**";
-                        sendDiscordAlert($content);
+                        sendDiscordAlert($content,$color);
                         insertCarKm($immat, $marque, $modele, $motorisation, $utilitaire);
                         $selectCar = $connect->prepare("SELECT * FROM VEHICULE WHERE immatriculation = :immat");
                         $selectCar->execute(array('immat' => $immat));
@@ -42,7 +43,7 @@
                     }
                     else{
                         $content = "**".strtoupper($_SESSION['username'])."** - Véhicule créé ➡️ **".$immat."** *".$marque."* **".$modele."**";
-                        sendDiscordAlert($content);
+                        sendDiscordAlert($content,$color);
                         insertCarWithKm($immat, $marque, $modele, $motorisation,$kilometrage, $utilitaire);
                         $selectCar = $connect->prepare("SELECT * FROM VEHICULE WHERE immatriculation = :immat");
                         $selectCar->execute(array('immat' => $immat));

@@ -55,7 +55,8 @@
                 $mail->Subject = "J-".$days_diff['diff_date']." ! Contrôle technique à venir pour ".$row['marque']." ".$row['modele']." (".$row['immatriculation'].")";
                 $content = "J-".$days_diff['diff_date']." ! Contrôle technique à venir pour ".$row['marque']." ".$row['modele']." (".$row['immatriculation']." | date butoire le ".$new_date.")";
                 $contentDiscord = "**J-".$days_diff['diff_date']."** ! Contrôle technique à venir pour *".$row['marque']." ".$row['modele']."* (***".$row['immatriculation']."*** | date butoire le **".$new_date."**)";
-                sendDiscordAlert($contentDiscord);
+                $color ="FF8800";
+                sendDiscordAlert($contentDiscord,$color);
                 $mail->MsgHTML($content); 
                 if(!$mail->Send()) {
                 echo "Error while sending Email.";
@@ -94,7 +95,8 @@
                 $mail->Subject = "!!!! Contrôle technique périmé depuis ".abs($days_diff['diff_date'])." jours pour ".$row['modele']." ".$row['marque']." | ".$row['immatriculation'];
                 $content = "Contrôle technique périmé depuis ".abs($days_diff['diff_date'])." jours pour ".$row['modele']." ".$row['marque']." | ".$row['immatriculation'];
                 $contentDiscord = "Contrôle technique périmé depuis ***".abs($days_diff['diff_date'])." jours*** pour ".$row['modele']." ".$row['marque']." | ".$row['immatriculation'];
-                sendDiscordAlert($contentDiscord);
+                $color ="6495ed";
+                sendDiscordAlert($contentDiscord,$color);
 
                 $mail->MsgHTML($content); 
                 if(!$mail->Send()) {

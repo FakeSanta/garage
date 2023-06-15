@@ -79,7 +79,7 @@ function getLogInfo($login){
     return $array;
 }
 
-function sendDiscordAlert($content){
+function sendDiscordAlert($content,$color){
     $webhookurl = "https://discordapp.com/api/webhooks/1114114201858887690/wbxb1tbZou4oqJisT0_JbjiZln_MiFpyAn_kGE-vY8H8zcPdbeeBdsAJhtESzmEMtevX";
 
     //=======================================================================================================
@@ -91,7 +91,7 @@ function sendDiscordAlert($content){
 
     $json_data = json_encode([
         // Message
-        "content" => $content,
+        //"content" => $content,
         
         // Username
         "username" => "Auto Decomble",
@@ -106,17 +106,17 @@ function sendDiscordAlert($content){
         // File upload
         // "file" => "",
 
-        /* Embeds Array
+        // Embeds Array
         "embeds" => [
             [
                 // Embed Title
-                //"title" => "PHP - Send message to Discord (embeds) via Webhook",
+                "title" => $content,
 
                 // Embed Type
-                //"type" => "rich",
+                "type" => "rich",
 
                 // Embed Description
-                //"description" => "Description will be here, someday, you can mention users here also by calling userID <@12341234123412341>",
+                "description" => $content,
 
                 // URL of title link
                 //"url" => "https://gist.github.com/Mo45/cb0813cb8a6ebcd6524f6a36d4f8862c",
@@ -125,18 +125,18 @@ function sendDiscordAlert($content){
                 //"timestamp" => $timestamp,
 
                 // Embed left border color in HEX
-                "color" => hexdec( "3366ff" ),
+                "color" => hexdec( $color ),
 
-                /* Footer
-                "footer" => [
+                // Footer
+                /*"footer" => [
                     "text" => "GitHub.com/Mo45",
                     "icon_url" => "https://ru.gravatar.com/userimage/28503754/1168e2bddca84fec2a63addb348c571d.jpg?size=375"
-                ],
+                ],*/
 
                 // Image to send
-                "image" => [
+                /*"image" => [
                     "url" => "https://ru.gravatar.com/userimage/28503754/1168e2bddca84fec2a63addb348c571d.jpg?size=600"
-                ],
+                ],*/
 
                 // Thumbnail
                 //"thumbnail" => [
@@ -144,12 +144,12 @@ function sendDiscordAlert($content){
                 //],
 
                 // Author
-                "author" => [
+                /*"author" => [
                     "name" => "krasin.space",
                     "url" => "https://krasin.space/"
-                ],
+                ],*/
 
-                // Additional Fields array
+                /* Additional Fields array
                 "fields" => [
                     // Field 1
                     [
@@ -164,9 +164,9 @@ function sendDiscordAlert($content){
                         "inline" => true
                     ]
                     // Etc..
-                ]
+                ]*/
             ]
-        ]*/
+        ]
 
     ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 
@@ -183,30 +183,6 @@ function sendDiscordAlert($content){
     // If you need to debug, or find out why you can't send message uncomment line below, and execute script.
     // echo $response;
     curl_close( $ch );
-}
-
-function getBrowser()
-{
-    $user_agent = $_SERVER['HTTP_USER_AGENT'];
-    $browser = "N/A";
-
-    $browsers = [
-        '/msie/i' => 'Internet explorer',
-        '/firefox/i' => 'Firefox',
-        '/safari/i' => 'Safari',
-        '/chrome/i' => 'Chrome',
-        '/edge/i' => 'Edge',
-        '/opera/i' => 'Opera',
-        '/mobile/i' => 'Téléphone',
-    ];
-
-    foreach ($browsers as $regex => $value) {
-        if (preg_match($regex, $user_agent)) {
-            $browser = $value;
-        }
-    }
-
-    return $browser;
 }
 
 function listEvents()

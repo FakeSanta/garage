@@ -84,7 +84,8 @@
                       );
                       $id_vehicule = $rdv_pris->fetch(PDO::FETCH_ASSOC);
                       $content = "**".strtoupper($_SESSION['username'])."** - RDV annulé pour le véhicule : **".$id_vehicule['vehicule_immatriculation']."** ".$id_vehicule['vehicule_marque']." ".$id_vehicule['vehicule_modele'];
-                      sendDiscordAlert($content);
+                      $color ="6495ed";
+                      sendDiscordAlert($content,$color);
 
 
 

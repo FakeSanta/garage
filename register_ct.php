@@ -202,7 +202,8 @@
                                           $insert_histo = $connect->prepare('INSERT INTO HISTORIQUE (id_vehicule, type_operation, date_ct, commentaire) VALUES (?,?,?,?)');
                                           $insert_histo->execute([$id_tuture, $type_ope, $result2['date_rdv'], $commentaire]);
                                           $contentDiscord = "**".strtoupper($_SESSION['username'])."** - Contrôle technique validé pour **".$immatriculation."** ".$vehicule['marque']." ".$vehicule['modele'];
-                                          sendDiscordAlert($contentDiscord);
+                                          $color ="008020";
+                                          sendDiscordAlert($contentDiscord,$color);
                                           $connect->commit();
                                           header('Location: suivi_ct');
                                           exit();

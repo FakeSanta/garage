@@ -135,7 +135,8 @@
                                           $date_format
                                         );
                                         $contentDiscord = "**".strtoupper($_SESSION['username'])."** - Contre visite pour **".$final['immatriculation']."** ".$final['marque']." ".$final['modele'].". La prochaine date est **".$date_format."**";
-                                        sendDiscordAlert($contentDiscord);
+                                        $color = "FF8800";
+                                        sendDiscordAlert($contentDiscord,$color);
                                         $id_tuture = $final['vehicule_id'];                                        
                                         $oldCt = $connect->prepare("UPDATE RDV SET rdv_annule = 1 WHERE id_vehicule = :id");
                                         $oldCt->execute(array('id' => $id_tuture));

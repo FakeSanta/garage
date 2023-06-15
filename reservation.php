@@ -394,7 +394,8 @@ error_reporting(E_ALL);
 							$rowVoiture = $getVoiture->fetch(PDO::FETCH_ASSOC);
 
 							$content = "**".strtoupper($_SESSION['username'])."** - Création réservation de la ***".$rowVoiture['immatriculation']."*** du ***".$new_start."*** au ***".$new_end."***";
-							sendDiscordAlert($content);
+							$color ="0080FF";
+							sendDiscordAlert($content,$color);
 							$random_color = rand_color();
 							if($_SESSION['role'] == 0){
 								$accepted = 0;

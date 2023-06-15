@@ -30,6 +30,9 @@ $end = str_replace(
     $end
 );
 
+$contentDiscord ="**".strtoupper($_SESSION['username'])."** - Réservation rejetée pour ".$user['modele']." ".$user['marque']." | ".$user['immatriculation']." du ".$start." au ".$end;
+$color="FF0000";
+sendDiscordAlert($contentDiscord,$color);
 
 $mail = new PHPMailer();
 $mail->CharSet = "UTF-8";
@@ -45,8 +48,8 @@ $mail->Username   = "supervision.decomble@gmail.com";
 $mail->Password   = "rvnqrxyankxtuegm";
 $mail->AddAddress($user['mail'],"Auto ".$brend);
 $mail->SetFrom("supervision.decomble@gmail.com", "Auto ".$brend);
-$mail->Subject = "Reservation annulee pour ".$user['modele']." ".$user['marque']." | ".$user['immatriculation']." du ".$start." au ".$end;
-$content = "Reservation annulee pour ".$user['modele']." ".$user['marque']." | ".$user['immatriculation']." du ".$start." au ".$end;
+$mail->Subject = "Reservation rejetée pour ".$user['modele']." ".$user['marque']." | ".$user['immatriculation']." du ".$start." au ".$end;
+$content = "Reservation rejetée pour ".$user['modele']." ".$user['marque']." | ".$user['immatriculation']." du ".$start." au ".$end;
 $mail->MsgHTML($content); 
 if(!$mail->Send()) {
     echo "Error while sending Email.";

@@ -177,7 +177,8 @@
                                             $mail->Subject = "RDV le " . $new_date . " pour le controle technique de " . $final['immatriculation'] . " " . $final['marque'] . " " . $final['modele'];
                                             $content = "RDV le " . $new_date . " pour le controle technique de " . $final['immatriculation'] . " " . $final['marque'] . " " . $final['modele'];
                                             $contentDiscord = "**" . strtoupper($_SESSION['username']) . "** - RDV le ***" . $new_date . "*** pour le controle technique de **" . $final['immatriculation'] . "** " . $final['marque'] . " " . $final['modele'];
-                                            sendDiscordAlert($contentDiscord);
+                                            $color ="008020";
+                                            sendDiscordAlert($contentDiscord,$color);
                                             $mail->MsgHTML($content);
 
                                             if(!$mail->Send())
