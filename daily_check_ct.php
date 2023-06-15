@@ -24,7 +24,7 @@
         $days_diff = $count_days_query->fetch(PDO::FETCH_ASSOC);
         $test = $days_diff['diff_date'];
         var_dump($test);
-        if($days_diff['diff_date'] < 360 && $days_diff['diff_date'] >= 1 && $row['rdv_pris'] == 0){
+        if($days_diff['diff_date'] < 60 && $days_diff['diff_date'] >= 1 && $row['rdv_pris'] == 0){
 
             $mail = new PHPMailer();
             $mail->CharSet = "UTF-8";
@@ -39,7 +39,7 @@
             $mail->Password   = "rvnqrxyankxtuegm";
             $sql = $connect->prepare("SELECT * FROM MAIL");
             $sql->execute();
-            if($sql->RowCount() > 1){
+            if($sql->RowCount() >= 1){
                 while($to = $sql->fetch(PDO::FETCH_ASSOC)){
                     $mail->AddAddress($to['mail'],"Auto-".$brend);
                     echo $to['mail'];
@@ -79,7 +79,7 @@
 
             $sql = $connect->prepare("SELECT * FROM MAIL");
             $sql->execute();
-            if($sql->RowCount() > 1){
+            if($sql->RowCount() >= 1){
                 while($to = $sql->fetch(PDO::FETCH_ASSOC)){
                     $mail->AddAddress($to['mail'],"Auto-".$brend);
                 }
