@@ -108,7 +108,7 @@
             <li class="menu-item <?php if($page == "reservation"){echo"active";} ?>">
               <a href="reservation" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-calendar-plus"></i>
-                <div data-i18n="Tables">Réservation d'un véhicule</div>
+                <div data-i18n="Tables">Réserver un véhicule</div>
               </a>
             </li>
             <?php
