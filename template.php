@@ -264,6 +264,13 @@
             </div>
           </nav>
         <?= $content ?>
+        <footer class="content-footer footer bg-footer-theme">
+          <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
+            <div class="mb-2 mb-md-0">
+              Copyright © <strong>Web Solution Info</strong> <?php echo date('Y')?>. Tous Droits Réservés
+            </div>
+          </div>
+        </footer>
       </div>
       <div class="layout-overlay layout-menu-toggle"></div>
     </div>
