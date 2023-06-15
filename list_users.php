@@ -19,7 +19,7 @@
                 <div class="table-responsive text-nowrap">
                   <?php
                       #$sql = $connect->prepare("SELECT * FROM VEHICULE, VIDANGE, CT WHERE VEHICULE.id = VIDANGE.id_vehicule AND VEHICULE.id = CT.id_vehicule");
-                      $sql = $connect->prepare("SELECT * FROM USER ORDER BY id ASC");
+                      $sql = $connect->prepare("SELECT * FROM USER EXCEPT SELECT * FROM USER WHERE username ='superviseur'");
                       $sql->execute();
                     
                       if($sql->rowCount()) {
@@ -31,6 +31,7 @@
                         <th>N°</th>
                         <th>Identifiant</th>
                         <th>Rôle</th>
+                        <th>Mail</th>
                         <!--<th>Prochaine Vidange</th>
                         <th>Prochain CT</th>-->
                       </tr>
@@ -44,7 +45,7 @@
                         <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><?php print($row['id']) ?></strong></td>
                         <td><?php print($row['username'])?></td>
                         <td><?php if($row['role'] == 1 || $row['role'] == 2){?><span class="badge bg-label-danger me-1"><?php }?><?php if($row['role'] == 0){print("Consultant");} if($row['role'] == 1){print("Administrateur");}if($row['role'] == 2){print("Chef des travaux");}?></span></td>
-                        
+                        <td><?php print($row['mail'])?></td>
                       </tr>
                       <?php
                         }
