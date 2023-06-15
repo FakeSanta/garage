@@ -101,6 +101,17 @@
                             max=<?php echo date('Y-m-d')?>
                           />
                         </div>
+                        <div class="mb-3">
+                          <label for="immat" class="form-label">Date de la dernière vidange :</label>
+                          <input
+                            type="date"
+                            class="form-control"
+                            id="date_vidange"
+                            name="date_vidange"
+                            placeholder=""
+                            max=<?php echo date('Y-m-d')?>
+                          />
+                        </div>
                         <div>
                           <label for="exampleFormControlTextarea1" class="form-label">Kilométrage<span class="text-muted fw-light"> (facultatif)</span></label>
                           <input class="form-control" type="number" name="kilometrage" value="" placeholder="Facultatif" id="html5-number-input">
