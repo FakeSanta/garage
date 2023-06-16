@@ -28,21 +28,25 @@ $mail->Password   = "rvnqrxyankxtuegm";
 if($car['reservable'] == 0){
     $query = $connect->prepare("UPDATE VEHICULE SET reservable = 1 WHERE id = ?");
 }else{
-    $user = $connect->prepare("select * from USER, reservation, VEHICULE where VEHICULE.id = reservation.id_vehicule and reservation.id_user = USER.id and id_vehicule =?");
+    $user = $connect->prepare("SELECT * FROM USER, reservation, VEHICULE WHERE VEHICULE.id = reservation.id_vehicule AND reservation.id_user = USER.id AND id_vehicule =?");
     $user->execute([$var]);
     if($user->rowCount()){
         while($row = $user->fetch(PDO::FETCH_ASSOC)){
+            var_dump($row['mail']);
+            $start = convertDate($row['start']);
+            $end = convertDate($row['end']);
             $mail->AddAddress($row['mail'],"Auto-".$brend);
-        }
-        $mail->IsHTML(true);
-        $mail->SetFrom("supervision.decomble@gmail.com", "Auto ".$brend);
-        $mail->Subject = "Réservation annulée";
-        $content = "La réservation du x au x avec x est annulée pour causewxx";
-        $mail->MsgHTML($content); 
-        if(!$mail->Send()) {
-        echo "Error while sending Email.";
-        } else {
-            echo "Email sent successfully";
+            $mail->IsHTML(true);
+            $mail->SetFrom("supervision.decomble@gmail.com", "Auto ".$brend);
+            $mail->Subject = "Réservation annulée";
+            $content = "La réservation du ".$start." au ".$end." avec ".$row['modele']." | ".$row['immatriculation']." est annulée car ce véhicule ne sera plus disponible à la réservation";
+            $mail->MsgHTML($content); 
+            if(!$mail->Send()) {
+            echo "Error while sending Email.";
+            } else {
+                $mail->clearAllRecipients();
+                echo "Email sent successfully";
+            }
         }
     }
     $query = $connect->prepare("UPDATE VEHICULE SET reservable = 0 WHERE id = ?");
