@@ -50,9 +50,6 @@ error_reporting(E_ALL);
     <link href="../assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Comfortaa:300" rel="stylesheet" type="text/css">
-
-	<!-- ColorPicker CSS -->
-	<link href="../assets/css/bootstrap-colorpicker.css" rel="stylesheet">
 	<script src="../assets/js/isotope.pkgd.min.js"></script> 
 </head>
 
@@ -182,87 +179,7 @@ error_reporting(E_ALL);
 									</div>
 								</div>
 							</div>													
-							<!-- New Event Creation Modal for the selectable date -->
-							<div class="modal fade" id="event1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-								<div class="modal-dialog" role="document">
-									<div class="modal-content">
-										<div class='modal-header'>
-											<h5 class='modal-title'><i class='fa fa-calendar' aria-hidden='true'></i> Nouvelle réservation</h5>
-											<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
-										</div>
-										<div class="modal-body">
-											 <!-- New Event Creation Form -->
-											<form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data" class="form-horizontal" name="novoevento">
-												<fieldset>
-													<!-- CSRF PROTECTION -->
 													
-													<!-- Text input-->
-													<div class="form-group">
-														<!-- Dans le calendar-->
-														<label class="col-md-3 control-label" for="voiture">Salle</label>
-														<div class="col-md-4">
-															<select name='voiture' class="form-control form-select input-md">
-																
-																<?php 
-																
-																$query = $connect->prepare("SELECT * FROM reservation ORDER BY id DESC");
-																$query->execute();
-																																	
-																while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-																	  
-																	echo "
-																	
-																	<option value='".$row['id']."'>".$row['id']."</option>
-																	
-																	";
-																						
-																  }
-															
-																?>
-															</select>
-														</div>
-													</div>
-													
-													<!-- Text input-->
-													<div class="form-group">
-														<label class="col-md-3 control-label" for="color">Couleur</label>
-														<div class="col-md-4">
-															<div id="cp2" class="input-group colorpicker-component">
-																<input id="cp2" type="text" class="form-control" name="color" value="#5367ce" required/>
-																<span class="input-group-addon"><i></i></span>
-															</div>
-														</div>
-													</div>
-
-													
-													<input id="start" class="form-control" name="start" type="hidden" value="">
-													<input id="end" class="form-control" name="end" type="hidden" value="">
-
-													<!-- Text input-->
-													<div class="form-group">
-														<label class="col-md-3 control-label" for="description">Description</label>
-														<div class="col-md-12">
-															<textarea class="form-control" rows="5" name="description" id="description"></textarea>
-														</div>
-													</div>
-
-													<!-- Button -->
-													<div class="form-group">
-														<label class="col-md-12 control-label" for="singlebutton"></label>
-														<div class="col-md-4">
-															<input type="submit" name="novoevento" class="btn btn-success" value="Ajouter" />
-														</div>
-													</div>
-
-												</fieldset>
-											</form>  
-										</div>
-										<div class="modal-footer">
-											<button type='button' class='btn btn-primary' data-bs-dismiss='modal'>Fermer</button>
-										</div>
-									</div>
-								</div>
-							</div>														
 							<?php
 								if($_SESSION['role'] != 0){
 							?>
@@ -368,6 +285,11 @@ error_reporting(E_ALL);
 						echo '<meta http-equiv="refresh" content="2; ./reservation">'; 
 						return false;
 					}
+					if($start >= $end){
+						echo "<script type='text/javascript'>swal('Ooops...!', 'Vous avez sûrement inversé les dates', 'error');</script>";	
+						echo '<meta http-equiv="refresh" content="2; ./reservation">'; 
+						return false;
+					}
 					if (!empty($start) || !empty($end) || !empty($voiture)) {
 						// Saves informationon the database
 						$verifDate = $connect->prepare("SELECT * FROM reservation, VEHICULE WHERE reservation.id_vehicule = VEHICULE.id AND id_vehicule =? AND start< ? AND end> ?");
@@ -394,16 +316,15 @@ error_reporting(E_ALL);
 							$rowVoiture = $getVoiture->fetch(PDO::FETCH_ASSOC);
 
 							$content = "**".strtoupper($_SESSION['username'])."** - Création réservation de la ***".$rowVoiture['immatriculation']."*** du ***".$new_start."*** au ***".$new_end."***";
-							$color ="0080FF";
+							$color ="FFFF00";
 							sendDiscordAlert($content,$color);
-							$random_color = rand_color();
 							if($_SESSION['role'] == 0){
 								$accepted = 0;
 							}else{
 								$accepted = 1;
 							}
-							$sql = $connect->prepare("INSERT INTO reservation (id_vehicule, description, start, end, color, id_user, accepted)VALUES (?,?,?,?,?,?,?)");
-							$sql->execute([$voiture,$description,$start,$end,$random_color,$_SESSION['id'],$accepted]);
+							$sql = $connect->prepare("INSERT INTO reservation (id_vehicule, description, start, end, id_user, accepted)VALUES (?,?,?,?,?,?)");
+							$sql->execute([$voiture,$description,$start,$end,$_SESSION['id'],$accepted]);
 
 							$getVoiture = $connect->prepare("SELECT * FROM VEHICULE WHERE id = :id");
 							$getVoiture->execute(array('id' => $voiture));
@@ -529,8 +450,6 @@ error_reporting(E_ALL);
 				forceParse: 0
 			});
 		</script>	
-		<!-- ColorPicker JavaScript -->
-		<script src="../assets/js/bootstrap-colorpicker.js"></script>
 		<!-- Plugin Script Initialization for DataTables -->
 		<script>
 			"use strict";
@@ -550,16 +469,7 @@ error_reporting(E_ALL);
 				});
 			});
 		</script>
-		<!-- ColorPicker Initialization -->
-		<script>
-			"use strict";
-			$(function() {
-				"use strict";
-				$('#cp1').colorpicker();
-				$('#cp2').colorpicker();
-			});
 		
-		</script>
 		<!-- JS array created from database -->
 		<?php echo listEvents(); ?>
 		

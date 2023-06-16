@@ -95,7 +95,7 @@
                 $mail->Subject = "!!!! Contrôle technique périmé depuis ".abs($days_diff['diff_date'])." jours pour ".$row['modele']." ".$row['marque']." | ".$row['immatriculation'];
                 $content = "Contrôle technique périmé depuis ".abs($days_diff['diff_date'])." jours pour ".$row['modele']." ".$row['marque']." | ".$row['immatriculation'];
                 $contentDiscord = "Contrôle technique périmé depuis ***".abs($days_diff['diff_date'])." jours*** pour ".$row['modele']." ".$row['marque']." | ".$row['immatriculation'];
-                $color ="6495ed";
+                $color ="FF0000";
                 sendDiscordAlert($contentDiscord,$color);
 
                 $mail->MsgHTML($content); 

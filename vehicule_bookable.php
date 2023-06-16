@@ -46,7 +46,7 @@
                                 </ul>
                               </td>
                               <td><strong><?php if($reservable == 1){print("Oui");}else{print("Non");}?></strong></td>
-                              <?php if($_SESSION['role'] == 1 || $_SESSION['role'] == 2){?>
+                              <?php if($_SESSION['role'] != 0){?>
                               <?php if($reservable == 0){
                                       echo"<td><a href='javascript:CarBookable(".$id.")' class='btn btn-success btn-sm' role='button'><i class='bx bx-calendar-check me-1'></i> Réservable</a></td>";
                                     }else{

@@ -20,29 +20,29 @@ error_reporting(E_ALL);
     <title>Réservation | <?php echo $brend ?></title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="calendar/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="calendar/assets/css/styles.css" rel="stylesheet">	
+    <link href="../assets/css/styles.css" rel="stylesheet">	
 	<!-- DateTimePicker CSS -->
-	<link href="calendar/assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">	
+	<link href="../assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">	
 	<!-- DataTables CSS -->
-    <link href="calendar/assets/css/dataTables.bootstrap.css" rel="stylesheet">	
+    <link href="../assets/css/dataTables.bootstrap.css" rel="stylesheet">	
 	<!-- FullCalendar CSS -->
-	<link href="calendar/assets/css/fullcalendar.css" rel="stylesheet" />
-	<link href="calendar/assets/css/fullcalendar.print.css" rel="stylesheet" media="print" />	
+	<link href="../assets/css/fullcalendar.css" rel="stylesheet" />
+	<link href="../assets/css/fullcalendar.print.css" rel="stylesheet" media="print" />	
 	<!-- jQuery -->
-    <script src="calendar/assets/js/jquery.js"></script>
+    <script src="../assets/js/jquery.js"></script>
 	<!-- SweetAlert CSS -->
-	<script src="calendar/assets/js/sweetalert.min.js"></script> 
-	<link rel="stylesheet" type="text/css" href="calendar/assets/css/sweetalert.css">
+	<script src="../assets/js/sweetalert.min.js"></script> 
+	<link rel="stylesheet" type="text/css" href="../assets/css/sweetalert.css">
     <!-- Custom Fonts -->
-    <link href="calendar/assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="../assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Comfortaa:300" rel="stylesheet" type="text/css">
 
 	<!-- ColorPicker CSS -->
-	<link href="calendar/assets/css/bootstrap-colorpicker.css" rel="stylesheet">
-	<script src="calendar/assets/js/isotope.pkgd.min.js"></script> 
+	<link href="../assets/css/bootstrap-colorpicker.css" rel="stylesheet">
+	<script src="../assets/js/isotope.pkgd.min.js"></script> 
 </head>
 
 	<body>
@@ -60,19 +60,20 @@ error_reporting(E_ALL);
 						 
 							<!-- Text input-->
 							<div class="form-group">
-								<label class="col-md-3 control-label" for="title">Salle</label>															
+								<label class="col-md-3 control-label" for="title">Véhicule</label>															
 								<div class="col-md-4">
 									<select name='title' class="form-control form-select input-md">
 										
-										<?php 								
-										$query = $connect->prepare("SELECT * FROM VEHICULE WHERE reservable = 1");
-										$query->execute();
+										<?php
+										$id_vehicule = $_GET['id_vehicule']; 								
+										$query = $connect->prepare("SELECT * FROM VEHICULE WHERE id = ? UNION SELECT * FROM VEHICULE WHERE reservable = 1");
+										$query->execute([$id_vehicule]);
 											
 										while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 											  
 											echo "
 											
-											<option value='".$row['id_vehicule']."'>".$row['modele']." ".$row['marque']." | ".$row['immatriculation']."</option>
+											<option value='".$row['id']."'>".$row['modele']." ".$row['marque']." | ".$row['immatriculation']."</option>
 											
 											";
 																
@@ -127,24 +128,24 @@ error_reporting(E_ALL);
 		</footer>
 
 		<!-- Bootstrap Core JavaScript -->
-		<script src="calendar/assets/js/bootstrap.min.js"></script>
+		<script src="../assets/js/bootstrap.min.js"></script>
 		<!-- DataTables JavaScript -->
-		<script src="calendar/assets/js/jquery.dataTables.js"></script>
-		<script src="calendar/assets/js/dataTables.bootstrap.js"></script>
+		<script src="../assets/js/jquery.dataTables.js"></script>
+		<script src="../assets/js/dataTables.bootstrap.js"></script>
 		<!-- Listings JavaScript delete options-->
-		<script src="calendar/assets/js/listings.js"></script>
+		<script src="../assets/js/listings.js"></script>
 		<!-- Metis Menu Plugin JavaScript -->
-		<script src="calendar/assets/js/metisMenu.min.js"></script>
+		<script src="../assets/js/metisMenu.min.js"></script>
 		<!-- Moment JavaScript -->
-		<script src="calendar/assets/js/moment.min.js"></script>
+		<script src="../assets/js/moment.min.js"></script>
 		<!-- FullCalendar JavaScript -->
-		<script src="calendar/assets/js/fullcalendar.js"></script>
+		<script src="../assets/js/fullcalendar.js"></script>
 		<!-- FullCalendar Language JavaScript Selector -->
-		<script src='calendar/assets/lang/fr.js'></script>
+		<script src='../assets/lang/fr.js'></script>
 		<!-- DateTimePicker JavaScript -->
-		<script type="text/javascript" src="calendar/assets/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="../assets/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
 		<!-- Option 1: Bootstrap Bundle with Popper -->
-        <script src="calendar/assets/js/bootstrap.bundle.min.js" ></script>  
+        <script src="../assets/js/bootstrap.bundle.min.js" ></script>  
 		<!-- Datetime picker initialization -->
 		<script type="text/javascript">	
 			"use strict";
@@ -159,7 +160,7 @@ error_reporting(E_ALL);
 			});
 		</script>	
 		<!-- ColorPicker JavaScript -->
-		<script src="calendar/assets/js/bootstrap-colorpicker.js"></script>
+		<script src="../assets/js/bootstrap-colorpicker.js"></script>
 		<!-- Plugin Script Initialization for DataTables -->
 		<script>
 			"use strict";

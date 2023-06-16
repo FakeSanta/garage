@@ -423,7 +423,31 @@ ORDER BY reservation_start ASC");
 function listAllEventsEdit()
 {
 	global $connect;
-	$sql = $connect->prepare("SELECT * FROM reservation, VEHICULE WHERE reservation.id_vehicule = VEHICULE.id AND accepted = 1 ORDER BY start ASC");
+	$sql = $connect->prepare("SELECT reservation.id AS reservation_id,
+	reservation.id_vehicule AS reservation_id_vehicule,
+	reservation.description AS reservation_description,
+	reservation.start AS reservation_start,
+	reservation.end AS reservation_end,
+	reservation.color AS reservation_color,
+	reservation.id_user AS reservation_id_user,
+	reservation.accepted AS reservation_accepted,
+	VEHICULE.id AS vehicule_id,
+	VEHICULE.immatriculation AS vehicule_immatriculation,
+	VEHICULE.marque AS vehicule_marque,
+	VEHICULE.modele AS vehicule_modele,
+	VEHICULE.motorisation AS vehicule_motorisation,
+	VEHICULE.kilometrage AS vehicule_kilometrage,
+	VEHICULE.utilitaire AS vehicule_utilitaire,
+	VEHICULE.reservable AS vehicule_reservable,
+	USER.id AS user_id,
+	USER.username AS user_username,
+	USER.mdp AS user_mdp,
+	USER.role AS user_role
+FROM reservation, VEHICULE, USER
+WHERE VEHICULE.id = reservation.id_vehicule
+AND reservation.id_user = USER.id
+AND accepted = 1
+ORDER BY reservation_start ASC");
 	$sql->execute();
     $row = $sql->rowCount();
 		
@@ -433,18 +457,19 @@ function listAllEventsEdit()
                   <th>Véhicule</th>
 				  <th>Début</th>
 				  <th>Fin</th>
+				  <th>Par</th>
 				  <th></th>
                 </tr>
               </thead>";
 		while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
-			$dateTime = strtotime($row['start']) ;
+			$dateTime = strtotime($row['reservation_start']) ;
 			$start = strftime('%d-%B-%Y %H:%M',$dateTime);
 			$start = str_replace( 
 				array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
 				array('Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'),
 				$start
 			);
-			$dateTime = strtotime($row['end']) ;
+			$dateTime = strtotime($row['reservation_end']) ;
 			$end = strftime('%d-%B-%Y %H:%M',$dateTime);
 			$end = str_replace( 
 				array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
@@ -453,13 +478,15 @@ function listAllEventsEdit()
 			);
 			// Print out the contents of each row into a table
 			echo "<tr><td>";		
-			echo $row['modele']." | ".$row['immatriculation'];
+			echo $row['vehicule_modele']." | ".$row['vehicule_immatriculation'];
 			echo "</td><td>"; 
 			echo $start;
 			echo "</td><td>";		
 			echo $end;
+			echo "</td><td>";		
+			echo $row['user_username'];
 			echo "</td><td class='r'>
-			<a href='booking_edit.php?id=". $row['id'] . "' class='btn btn-primary btn-sm' role='button'><i class='fa fa-fw fa-edit'></i> Modifier</a></td>";
+			<a href='booking_edit?id=". $row['reservation_id'] . "&id_vehicule=".$row['vehicule_id']."' class='btn btn-primary btn-sm' role='button'><i class='fa fa-fw fa-edit'></i> Modifier</a></td>";
 			echo "</tr>"; 	
 		} 
 
@@ -639,23 +666,26 @@ function editEvent($id)
 	$sql = $connect->prepare("SELECT * FROM reservation WHERE id= :id");
 	$sql->execute(array('id' => $id));
     $row = $sql->fetch(PDO::FETCH_ASSOC);
+	$start = convertDate($row['start']);
+	$end = convertDate($row['end']);
+
     echo "
 				<fieldset>		
 					<div class='form-group col-md-4'>
-						<label class='col-md-3 control-label' for='start'>Start Date</label>
-						<div class='input-group date form_date col-md-3' data-date='' data-date-format='yyyy-mm-dd hh:ii' data-link-field='start' data-link-format='yyyy-mm-dd hh:ii'>
-							<span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span><input class='form-control' size='4' type='text' value='".$row['start']."' readonly>
+						<label class='col-md-3 control-label' for='start'>Début</label>
+						<div class='input-group date form_date col-md-3' data-date='' data-date-format='dd-MM-yyyy hh:ii' data-link-field='start' data-link-format='yyyy-mm-dd hh:ii'>
+							<span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span><input class='form-control' size='4' type='text' value='".$start."' readonly>
 						</div>
-						<input id='start' name='start' type='hidden' value='".$row['start']."' required>
+						<input id='start' name='start' type='hidden' value='".$start."' required>
 
 					</div>
 
 					<div class='form-group col-md-4'>
-						<label class='col-md-3 control-label' for='end'>End Date</label>
-						<div class='input-group date form_date col-md-3' data-date='' data-date-format='yyyy-mm-dd hh:ii' data-link-field='end' data-link-format='yyyy-mm-dd hh:ii'>
-							<span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span><input class='form-control' size='4' type='text' value='".$row['end']."' readonly>
+						<label class='col-md-3 control-label' for='end'>Fin</label>
+						<div class='input-group date form_date col-md-3' data-date='' data-date-format='dd-MM-yyyy hh:ii' data-link-field='end' data-link-format='yyyy-mm-dd hh:ii'>
+							<span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span><input class='form-control' size='4' type='text' value='".$end."' readonly>
 						</div>
-						<input id='end' name='end' type='hidden' value='".$row['end']."' required>
+						<input id='end' name='end' type='hidden' value='".$end."' required>
 
 					</div>
 
@@ -678,25 +708,32 @@ function editEvent($id)
 function updateEvent($id,$voiture,$description,$start,$end)
 {
 	global $connect;
-	$query = $connect->prepare("UPDATE reservation SET id_vehicule = :id_vehicule , description = :description, start = :start, end = :end WHERE id = :id");
-	$query->execute(
-		array(
-			'id' => $id,
-			'id_vehicule' => $voiture,
-			'description' => $description,
-			'start' => $start,
-			'end' => $end,
-		)
-		);
-	if (!$query) {
-		echo ("No data was inserted!");
-		return false;
-	} else {
-			echo "<script type='text/javascript'>swal('Super !', 'Réservation mise à jour!', 'success');</script>";
-			echo '<meta http-equiv="refresh" content="2; ./">'; 
-			die();
-			}				
-			return true;
+	$verifDate = $connect->prepare("SELECT * FROM reservation, VEHICULE WHERE reservation.id_vehicule = VEHICULE.id AND id_vehicule =? AND start< ? AND end> ?");
+	$verifDate->execute([$voiture, $end, $start]);
+	if($verifDate->rowCount()){
+		echo "<script type='text/javascript'>swal('Erreur !', 'Pas disponible dans ces crénaux', 'error');</script>";
+		echo '<meta http-equiv="refresh" content="2; ./reservation">'; 
+	}else{
+		$query = $connect->prepare("UPDATE reservation SET id_vehicule = :id_vehicule , description = :description, start = :start, end = :end WHERE id = :id");
+		$query->execute(
+			array(
+				'id' => $id,
+				'id_vehicule' => $voiture,
+				'description' => $description,
+				'start' => $start,
+				'end' => $end,
+			)
+			);
+		if (!$query) {
+			echo ("No data was inserted!");
+			return false;
+		} else {
+				echo "<script type='text/javascript'>swal('Super !', 'Réservation mise à jour!', 'success');</script>";
+				echo '<meta http-equiv="refresh" content="2; ./reservation">'; 
+				die();
+				}				
+				return true;
+	}
 }
 
 
