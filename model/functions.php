@@ -463,14 +463,14 @@ ORDER BY reservation_start ASC");
               </thead>";
 		while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
 			$dateTime = strtotime($row['reservation_start']) ;
-			$start = strftime('%d-%B-%Y %H:%M',$dateTime);
+			$start = strftime('%d %B %Y %H:%M',$dateTime);
 			$start = str_replace( 
 				array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
 				array('Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'),
 				$start
 			);
 			$dateTime = strtotime($row['reservation_end']) ;
-			$end = strftime('%d-%B-%Y %H:%M',$dateTime);
+			$end = strftime('%d %B %Y %H:%M',$dateTime);
 			$end = str_replace( 
 				array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
 				array('Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'),
@@ -669,37 +669,37 @@ function editEvent($id)
 	$start = convertDate($row['start']);
 	$end = convertDate($row['end']);
 
-    echo "
-				<fieldset>		
-					<div class='form-group col-md-4'>
-						<label class='col-md-3 control-label' for='start'>Début</label>
-						<div class='input-group date form_date col-md-3' data-date='' data-date-format='dd-MM-yyyy hh:ii' data-link-field='start' data-link-format='yyyy-mm-dd hh:ii'>
-							<span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span><input class='form-control' size='4' type='text' value='".$start."' readonly>
-						</div>
-						<input id='start' name='start' type='hidden' value='".$start."' required>
+	echo "
+    <fieldset>		
+        <div class='form-group col-md-4'>
+            <label class='col-md-3 control-label' for='start'>Début</label>
+            <div class='input-group date form_date col-md-3' data-date='' data-date-format='dd-MM-yyyy hh:ii' data-link-field='start' data-link-format='dd-MM-yyyy hh:ii'>
+                <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
+                <input class='form-control' size='4' type='text' value='".$row['start']."' readonly>
+            </div>
+            <input id='start' name='start' type='hidden' value='".$row['start']."' required>
+        </div>
 
-					</div>
+        <div class='form-group col-md-4'>
+            <label class='col-md-3 control-label' for='end'>Fin</label>
+            <div class='input-group date form_date col-md-3' data-date='' data-date-format='dd-MM-yyyy hh:ii' data-link-field='end' data-link-format='dd-mm-yyyy hh:ii'>
+                <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
+                <input class='form-control' size='4' type='text' value='".$row['end']."' readonly>
+            </div>
+            <input id='end' name='end' type='hidden' value='".$row['end']."' required>
+        </div>
 
-					<div class='form-group col-md-4'>
-						<label class='col-md-3 control-label' for='end'>Fin</label>
-						<div class='input-group date form_date col-md-3' data-date='' data-date-format='dd-MM-yyyy hh:ii' data-link-field='end' data-link-format='yyyy-mm-dd hh:ii'>
-							<span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span><input class='form-control' size='4' type='text' value='".$end."' readonly>
-						</div>
-						<input id='end' name='end' type='hidden' value='".$end."' required>
+        <!-- Text input-->
+        <div class='form-group'>
+            <label class='col-md-3 control-label' for='description'>Description</label>
+            <div class='col-md-6'>
+                <textarea class='form-control' rows='5' name='description' id='description'>".$row['description']."</textarea>
+            </div>
+        </div>
+    </fieldset>
+";
 
-					</div>
 
-
-					<!-- Text input-->
-					<div class='form-group'>
-						<label class='col-md-3 control-label' for='description'>Description</label>
-						<div class='col-md-6'>
-							<textarea class='form-control' rows='5' name='description' id='description'>".$row['description']."</textarea>
-						</div>
-					</div>
-					
-	
-				";
 
 }
 

@@ -26,13 +26,32 @@ $mail->Username   = "supervision.decomble@gmail.com";
 $mail->Password   = "rvnqrxyankxtuegm";
 
 if($car['reservable'] == 0){
+    $user = $connect->prepare("SELECT * FROM USER, reservation, VEHICULE WHERE VEHICULE.id = reservation.id_vehicule AND reservation.id_user = USER.id AND id_vehicule = ? AND CURDATE() < start");
+    $user->execute([$var]);
+    if($user->rowCount()){
+        while($row = $user->fetch(PDO::FETCH_ASSOC)){
+            $start = convertDate($row['start']);
+            $end = convertDate($row['end']);
+            $mail->AddAddress($row['mail'],"Auto-".$brend);
+            $mail->IsHTML(true);
+            $mail->SetFrom("supervision.decomble@gmail.com", "Auto ".$brend);
+            $mail->Subject = "Réservation re-effective";
+            $content = "La réservation du ".$start." au ".$end." avec ".$row['modele']." | ".$row['immatriculation']." est re-effective car ce véhicule est de nouveau disponible à la réservation";
+            $mail->MsgHTML($content); 
+            if(!$mail->Send()) {
+            echo "Error while sending Email.";
+            } else {
+                $mail->clearAllRecipients();
+                echo "Email sent successfully";
+            }
+        }
+    }
     $query = $connect->prepare("UPDATE VEHICULE SET reservable = 1 WHERE id = ?");
 }else{
     $user = $connect->prepare("SELECT * FROM USER, reservation, VEHICULE WHERE VEHICULE.id = reservation.id_vehicule AND reservation.id_user = USER.id AND id_vehicule =?");
     $user->execute([$var]);
     if($user->rowCount()){
         while($row = $user->fetch(PDO::FETCH_ASSOC)){
-            var_dump($row['mail']);
             $start = convertDate($row['start']);
             $end = convertDate($row['end']);
             $mail->AddAddress($row['mail'],"Auto-".$brend);
