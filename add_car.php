@@ -26,33 +26,26 @@
                 }
                 else{
                     $color ="008020";
+                    $random_color = rand_color();
                     if(empty($_POST['kilometrage'])){
                         $content = "**".strtoupper($_SESSION['username'])."** - Véhicule créé ➡️ **".$immat."** *".$marque."* **".$modele."**";
                         sendDiscordAlert($content,$color);
-                        insertCarKm($immat, $marque, $modele, $motorisation, $utilitaire);
+                        insertCarKm($immat, $marque, $modele, $motorisation, $utilitaire,$random_color);
                         $selectCar = $connect->prepare("SELECT * FROM VEHICULE WHERE immatriculation = :immat");
                         $selectCar->execute(array('immat' => $immat));
                         $resultCar = $selectCar->fetch(PDO::FETCH_ASSOC);
                         $insert_ct = $connect->prepare('INSERT INTO CT (id_vehicule, date_ct, prochaine_date_ct) VALUES (?,?,?)')->execute([$resultCar['id'], $current_date_ct, $next_date_ct]);
                         $insert_vidange = $connect->prepare('INSERT INTO VIDANGE (id_vehicule, date_vidange, prochaine_date_vidange) VALUES (?,?,?)')->execute([$resultCar['id'], $current_date_vidange, $next_date_vidange]);
-                        //$insert_ct_histo = $connect->prepare('INSERT INTO HISTORIQUE (id_vehicule, type_operation, date_ct, commentaire) VALUES (?,?,?,"")')->execute([$resultCar['id'], $type_ope, $current_date_ct]);
-                        //$insert_vidange_histo = $connect->prepare('INSERT INTO HISTORIQUE (id_vehicule, type_operation, date_vidange, commentaire) VALUES (?,?,?,"")')->execute([$resultCar['id'], $type_ope, $current_date_vidange]);
-
-                        
-
                     }
                     else{
                         $content = "**".strtoupper($_SESSION['username'])."** - Véhicule créé ➡️ **".$immat."** *".$marque."* **".$modele."**";
                         sendDiscordAlert($content,$color);
-                        insertCarWithKm($immat, $marque, $modele, $motorisation,$kilometrage, $utilitaire);
+                        insertCarWithKm($immat, $marque, $modele, $motorisation,$kilometrage, $utilitaire,$random_color);
                         $selectCar = $connect->prepare("SELECT * FROM VEHICULE WHERE immatriculation = :immat");
                         $selectCar->execute(array('immat' => $immat));
                         $resultCar = $selectCar->fetch(PDO::FETCH_ASSOC);
                         $insert_ct = $connect->prepare('INSERT INTO CT (id_vehicule, date_ct, prochaine_date_ct) VALUES (?,?,?)')->execute([$resultCar['id'], $current_date_ct, $next_date_ct]);
-                        $insert_vidange = $connect->prepare('INSERT INTO VIDANGE (id_vehicule, date_vidange, prochaine_date_vidange) VALUES (?,?,?)')->execute([$resultCar['id'], $current_date_vidange, $next_date_vidange]);
-
-                        //$insert_histo = $connect->prepare('INSERT INTO HISTORIQUE (id_vehicule, type_operation, date_ct, commentaire) VALUES (?,?,?,"")')->execute([$resultCar['id'], $type_ope, $current_date_ct]);
-                        
+                        $insert_vidange = $connect->prepare('INSERT INTO VIDANGE (id_vehicule, date_vidange, prochaine_date_vidange) VALUES (?,?,?)')->execute([$resultCar['id'], $current_date_vidange, $next_date_vidange]);                      
                     }
                 }
             }else{
