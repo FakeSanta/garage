@@ -38,14 +38,14 @@ function checkCarExist($immat){
 }
 
 
-function insertCarWithKm($immat, $marque, $modele, $motorisation,$kilometrage, $utilitaire){
+function insertCarWithKm($immat, $marque, $modele, $motorisation,$kilometrage, $utilitaire,$color){
     $connectdb = dbConnect();
-    $insert = $connectdb->prepare('INSERT INTO VEHICULE (immatriculation, marque, modele, motorisation, kilometrage, utilitaire, rdv_pris, reservable) VALUES (?,?,?,?,?,?,0,0)')->execute([$immat, $marque, $modele, $motorisation, $kilometrage, $utilitaire]);
+    $insert = $connectdb->prepare('INSERT INTO VEHICULE (immatriculation, marque, modele, motorisation, kilometrage, utilitaire, rdv_pris, reservable,color) VALUES (?,?,?,?,?,?,0,0,?)')->execute([$immat, $marque, $modele, $motorisation, $kilometrage, $utilitaire,$color]);
 }
 
-function insertCarKm($immat, $marque, $modele, $motorisation, $utilitaire){
+function insertCarKm($immat, $marque, $modele, $motorisation, $utilitaire,$color){
     $connectdb = dbConnect();
-    $insert = $connectdb->prepare('INSERT INTO VEHICULE (immatriculation, marque, modele, motorisation, utilitaire, rdv_pris, reservable) VALUES (?,?,?,?,?, 0,0)')->execute([$immat, $marque, $modele, $motorisation, $utilitaire]);
+    $insert = $connectdb->prepare('INSERT INTO VEHICULE (immatriculation, marque, modele, motorisation, utilitaire, rdv_pris, reservable,color) VALUES (?,?,?,?,?, 0,0,?)')->execute([$immat, $marque, $modele, $motorisation, $utilitaire,$color]);
 }
 
 function checkLogin($login,$password){
@@ -188,7 +188,7 @@ function sendDiscordAlert($content,$color){
 function listEvents()
 {
 	global $connect;
-	$sql = $connect->prepare("SELECT * FROM reservation, VEHICULE, USER WHERE VEHICULE.id = reservation.id_vehicule AND reservation.id_user = USER.id AND accepted = 1");
+	$sql = $connect->prepare("SELECT * FROM reservation, VEHICULE, USER WHERE VEHICULE.id = reservation.id_vehicule AND reservation.id_user = USER.id AND accepted = 1 AND reservable = 1");
 	$sql->execute();
 	
     $row = $sql->rowCount(); //changed
