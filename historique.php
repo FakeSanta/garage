@@ -66,7 +66,7 @@
                             html += "<td>"+value.motorisation+"</td>";
                             html += "<td>" + (value.date_vidange != '------' ? value.date_vidange : '')+"</td>";
                             html += "<td>" + (value.date_ct != '------' ? value.date_ct : '')+"</td>";
-                            html += "<td>"+value.commentaire+"</td>";
+                            html += "<td style='white-space: pre-wrap;'>"+value.commentaire+"</td>";
                             html += "</tr> ";
                           });
                           $("#car_selected tbody").html(html);

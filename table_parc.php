@@ -32,8 +32,9 @@
                         <th>Marque</th>
                         <th>Modèle</th>
                         <th>Motorisation</th>
-                        <?php if($_SESSION['role'] == 1 || $_SESSION['role'] == 2){?>
-                        <th>Action</th>
+                        <?php if($_SESSION['role'] != 0){?>
+                        <th>Modifier</th>
+                        <th>Supprimer</th>
                         <?php } ?>
                         <!--<th>Prochain CT</th>-->
                       </tr>
@@ -42,6 +43,7 @@
                       <?php
                         while($row = $sql->fetch(PDO::FETCH_ASSOC))
                         {
+                          $id = $row['id'];
                       ?>
                       <tr>
                         <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><?php print($row['immatriculation']) ?></strong></td>
@@ -51,12 +53,19 @@
                           </ul>
                         </td>
                         <td><span class="badge bg-label-<?php if($row['motorisation'] == 'Diesel'){print('warning');}elseif($row['motorisation'] == 'Essence'){print('success');}elseif($row['motorisation'] == 'Electrique'){print('info');}else{print('primary');}?> me-1"><?php print($row['motorisation']) ?></span></td>
-                        <?php if($_SESSION['role'] == 1 || $_SESSION['role'] == 2){?>
-                        <form method="POST" action="">    
+                        <?php if($_SESSION['role'] != 0){?>
+                        <form method="POST" action="edit_car.php?id=<?php echo $row['id'];?>">    
                           <td>
                               <button type="submit" class="btn p-0 dropdown-toggle hide-arrow" name="del_id" value="<?php print($row['id']) ?>">
-                                <i class="bx bx-trash me-1" id="<?php print($row['immatriculation']) ?>"></i> Supprimer
+                                <i class="bx bx-pencil me-1" id="<?php print($row['immatriculation']) ?>"></i> Modifier
                               </button>
+                          </td>
+                        </form>
+                        <form method="POST" action="">    
+                          <td>
+                            <?php
+                              echo"<a href='javascript:DeleteCar(".$id.")' class='btn p-0 dropdown-toggle hide-arrow' role='button'><i class='bx bx-trash me-1'></i> Supprimer</a>";
+                            ?>
                           </td>
                         </form>
                         <?php } ?>
@@ -67,17 +76,6 @@
                     </tbody>
                   </table>
                   <?php
-                    }
-                    if(isset($_POST['del_id'])){
-                      $id=$_POST['del_id'];
-                      echo"<script>console.log('".$id."')</script>";
-                      $del_selected = $connect->prepare('DELETE FROM VEHICULE WHERE id = :id');
-                      $del_selected->execute(
-                        array(
-                          'id' => $id
-                        )
-                      );
-                      header('Location:table_parc');
                     }
                   ?>
                 </div>

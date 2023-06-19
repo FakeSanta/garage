@@ -97,6 +97,11 @@
                         </div>
                         <hr class="m-0" />
                         <div class="mb-3">
+                            <label for="exampleFormControlReadOnlyInputPlain1" class="form-label"><strong>Motif de la contre visite</strong></label>
+                            <textarea class="form-control" name="commentaire" rows="3" required></textarea>
+                        </div>
+                        <hr class="m-0" />
+                        <div class="mb-3">
                             <label for="exampleFormControlReadOnlyInputPlain1" class="form-label"><strong>Date de la contre visite</strong></label>
                             <input
                             type="date"
@@ -120,14 +125,19 @@
                                     if ($_POST['datePicker'] > date('Y-m-d')) {
                                         $check = $connect->prepare("SELECT V.id AS vehicule_id, V.immatriculation AS immatriculation, V.marque AS marque, V.modele AS modele, V.motorisation AS motorisation,
                                         V.kilometrage AS kilometrage, V.utilitaire AS utilitaire, V.rdv_pris AS rdv_pris,
-                                        R.id AS rdv_id, R.date_rdv AS date_rdv, R.id_vehicule AS rdv_vehicule_id, R.rdv_effectue AS rdv_effectue, R.rdv_annule AS rdv_annule
+                                        R.id AS rdv_id, R.date_rdv AS date_rdv, R.id_vehicule AS rdv_vehicule_id, R.rdv_effectue AS rdv_effectue, R.rdv_annule AS rdv_annule, date_ct
                                         FROM VEHICULE V
                                         INNER JOIN RDV R ON V.id = R.id_vehicule
+                                        INNER JOIN CT ON V.id = CT.id_vehicule
                                         WHERE V.immatriculation = :immatriculation                                 
                                       ");
                                         $check->execute(['immatriculation' => $_POST['immat']]);
                                         $final = $check->fetch(PDO::FETCH_ASSOC);
-
+                                        $date_ct = convertDateDay($final['date_ct']);
+                                        $commentaire = "Contre visite du ".$date_ct.". ".$_POST['commentaire'];
+                                        echo"<script>console.log('".$_POST['commentaire']." ".$commentaire."')</script>";
+                                        $id_tuture = $final['vehicule_id'];                                        
+                                        $insert_histo = $connect->prepare('INSERT INTO HISTORIQUE (id_vehicule, commentaire) VALUE(?,?)')->execute([$id_tuture,$commentaire]);
                                         $date_format = strftime("%d %B %Y",strtotime($_POST['datePicker']));
                                         $date_format = str_replace( 
                                           array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
@@ -137,7 +147,6 @@
                                         $contentDiscord = "**".strtoupper($_SESSION['username'])."** - Contre visite pour **".$final['immatriculation']."** ".$final['marque']." ".$final['modele'].". La prochaine date est **".$date_format."**";
                                         $color = "FF8800";
                                         sendDiscordAlert($contentDiscord,$color);
-                                        $id_tuture = $final['vehicule_id'];                                        
                                         $oldCt = $connect->prepare("UPDATE RDV SET rdv_annule = 1 WHERE id_vehicule = :id");
                                         $oldCt->execute(array('id' => $id_tuture));
                                         $insert_rdv = $connect->prepare('INSERT INTO RDV (date_rdv, id_vehicule, rdv_effectue, rdv_annule) VALUES (?,?, 0,0)')->execute([$_POST['datePicker'], $id_tuture]);

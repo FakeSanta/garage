@@ -36,7 +36,11 @@ function CarNonBookable(id){
 }
 
 function CarBookable(id){
-	swal({   title: "Ajouter ce véhicule aux réservations",   text: "Ajouter ce véhicule aux réservations",   type: "info",   showCancelButton: true,   confirmButtonColor: "#E6381A",   confirmButtonText: "Ajouter aux réservations",   cancelButtonText: "Revenir en arrière",   closeOnConfirm: false,   closeOnCancel: false }, function(isConfirm){   if (isConfirm) {    location.href='carBookable.php?id='+id;   } else {     swal("Annulé", "", "error");   } });
+	swal({   title: "Ajouter ce véhicule aux réservations",   text: "Ajouter ce véhicule aux réservations",   type: "info",   showCancelButton: true,   confirmButtonColor: "#157447",   confirmButtonText: "Ajouter aux réservations",   cancelButtonText: "Revenir en arrière",   closeOnConfirm: false,   closeOnCancel: false }, function(isConfirm){   if (isConfirm) {    location.href='carBookable.php?id='+id;   } else {     swal("Annulé", "", "error");   } });
+}
+
+function DeleteCar(id){
+	swal({   title: "Supprimer ce véhicule",   text: "Supprimer ce véhicule",   type: "warning",   showCancelButton: true,   confirmButtonColor: "#E6381A",   confirmButtonText: "Supprimer",   cancelButtonText: "Revenir en arrière",   closeOnConfirm: false,   closeOnCancel: false }, function(isConfirm){   if (isConfirm) {    location.href='del_car.php?id='+id;   } else {     swal("Annulé", "", "error");   } });
 }
 
 function scrollNav() {

@@ -79,6 +79,7 @@ function getLogInfo($login){
     return $array;
 }
 
+
 function sendDiscordAlert($content,$color){
     $webhookurl = "https://discordapp.com/api/webhooks/1114114201858887690/wbxb1tbZou4oqJisT0_JbjiZln_MiFpyAn_kGE-vY8H8zcPdbeeBdsAJhtESzmEMtevX";
 
@@ -188,7 +189,13 @@ function sendDiscordAlert($content,$color){
 function listEvents()
 {
 	global $connect;
-	$sql = $connect->prepare("SELECT * FROM reservation, VEHICULE, USER WHERE VEHICULE.id = reservation.id_vehicule AND reservation.id_user = USER.id AND accepted = 1 AND reservable = 1");
+	$sql = $connect->prepare("SELECT *
+	FROM reservation
+	JOIN VEHICULE ON VEHICULE.id = reservation.id_vehicule
+	JOIN USER ON reservation.id_user = USER.id
+	WHERE accepted = 1
+	  AND (reservable = 1 OR start < CURDATE())
+	");
 	$sql->execute();
 	
     $row = $sql->rowCount(); //changed
@@ -497,6 +504,17 @@ ORDER BY reservation_start ASC");
 function convertDate($date){
 	$dateTime = strtotime($date) ;
 	$newdate = strftime('%d %B %Y à %H:%M',$dateTime);
+	$newdate = str_replace( 
+		array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
+		array('Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'),
+		$newdate
+	);
+	return $newdate;
+}
+
+function convertDateDay($date){
+	$dateTime = strtotime($date) ;
+	$newdate = strftime('%d %B %Y',$dateTime);
 	$newdate = str_replace( 
 		array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
 		array('Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'),

@@ -36,7 +36,7 @@ if($car['reservable'] == 0){
             $mail->IsHTML(true);
             $mail->SetFrom("supervision.decomble@gmail.com", "Auto ".$brend);
             $mail->Subject = "Réservation re-effective";
-            $content = "La réservation du ".$start." au ".$end." avec ".$row['modele']." | ".$row['immatriculation']." est re-effective car ce véhicule est de nouveau disponible à la réservation";
+            $content = "La réservation du <b>".$start." au ".$end."</b> avec ".$row['modele']." | ".$row['immatriculation']." est re-effective car ce véhicule est de nouveau disponible à la réservation";
             $mail->MsgHTML($content); 
             if(!$mail->Send()) {
             echo "Error while sending Email.";
@@ -48,7 +48,7 @@ if($car['reservable'] == 0){
     }
     $query = $connect->prepare("UPDATE VEHICULE SET reservable = 1 WHERE id = ?");
 }else{
-    $user = $connect->prepare("SELECT * FROM USER, reservation, VEHICULE WHERE VEHICULE.id = reservation.id_vehicule AND reservation.id_user = USER.id AND id_vehicule =?");
+    $user = $connect->prepare("SELECT * FROM USER, reservation, VEHICULE WHERE VEHICULE.id = reservation.id_vehicule AND reservation.id_user = USER.id AND id_vehicule =? AND CURDATE() < start");
     $user->execute([$var]);
     if($user->rowCount()){
         while($row = $user->fetch(PDO::FETCH_ASSOC)){
@@ -58,7 +58,7 @@ if($car['reservable'] == 0){
             $mail->IsHTML(true);
             $mail->SetFrom("supervision.decomble@gmail.com", "Auto ".$brend);
             $mail->Subject = "Réservation annulée";
-            $content = "La réservation du ".$start." au ".$end." avec ".$row['modele']." | ".$row['immatriculation']." est annulée car ce véhicule ne sera plus disponible à la réservation";
+            $content = "La réservation du <b>".$start." au ".$end."</b> avec ".$row['modele']." | ".$row['immatriculation']." est annulée car ce véhicule ne sera plus disponible à la réservation";
             $mail->MsgHTML($content); 
             if(!$mail->Send()) {
             echo "Error while sending Email.";
