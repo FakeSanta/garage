@@ -55,7 +55,7 @@ if(!$mail->Send()) {
     echo "Error while sending Email.";
     echo "<script>console.log(" . json_encode($mail) . ")</script>";
 }else{
-    $query = $connect->prepare("DELETE FROM reservation WHERE id = :id");
+    $query = $connect->prepare("UPDATE reservation SET accepted = 2 WHERE id = :id");
     $query->execute(array('id' => $var));
 }
 ?>

@@ -257,7 +257,7 @@
       <?php if($_SESSION['role'] != 0){ ?>
       <div class="row">
         <!-- Grande carte gauche-->
-        <div class="col-lg-8 mb-4 order-0">
+        <div class="col-lg-12 mb-4 order-0">
           <div class="card">
             <div class="d-flex align-items-end row">
               <div class="col-sm-12">
@@ -266,6 +266,29 @@
                   <div class="table-responsive text-nowrap">
                     <?php
                       listAllWaitingIndex();
+                    ?>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <?php
+        }
+      ?>
+      <?php if($_SESSION['role'] == 0){ ?>
+      <div class="row">
+        <!-- Grande carte gauche-->
+        <div class="col-lg-12 mb-4 order-0">
+          <div class="card">
+            <div class="d-flex align-items-end row">
+              <div class="col-sm-12">
+                <div class="card-body">
+                  <h5 class="card-title text-primary">Statut de vos réservations : </h5>
+                  <div class="table-responsive text-nowrap">
+                    <?php
+                      listAllWaitingIndexCusto($_SESSION['id']);
                     ?>
                   </div>
                 </div>

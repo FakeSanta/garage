@@ -523,6 +523,69 @@ function convertDateDay($date){
 	return $newdate;
 }
 
+function listAllWaitingIndexCusto($id_user){
+	global $connect;
+	$sql = $connect->prepare("SELECT reservation.id AS reservation_id,
+	reservation.id_vehicule AS reservation_id_vehicule,
+	reservation.description AS reservation_description,
+	reservation.start AS reservation_start,
+	reservation.end AS reservation_end,
+	reservation.color AS reservation_color,
+	reservation.id_user AS reservation_id_user,
+	reservation.accepted AS reservation_accepted,
+	VEHICULE.id AS vehicule_id,
+	VEHICULE.immatriculation AS vehicule_immatriculation,
+	VEHICULE.marque AS vehicule_marque,
+	VEHICULE.modele AS vehicule_modele,
+	VEHICULE.motorisation AS vehicule_motorisation,
+	VEHICULE.kilometrage AS vehicule_kilometrage,
+	VEHICULE.utilitaire AS vehicule_utilitaire,
+	VEHICULE.reservable AS vehicule_reservable,
+	USER.id AS user_id,
+	USER.username AS user_username,
+	USER.mdp AS user_mdp,
+	USER.role AS user_role
+FROM reservation, VEHICULE, USER
+WHERE VEHICULE.id = reservation.id_vehicule
+	AND reservation.id_user = USER.id
+	AND reservation.id_user = ?
+	AND CURDATE() < start
+ORDER BY reservation_start ASC
+");
+	$sql->execute([$id_user]);
+	if($sql->rowCount()){
+		echo '<table class="table table-hover">';
+		echo '<thead>';
+			echo '<tr>';
+				echo '<th>Véhicule</th>';
+				echo '<th>Du</th>';
+				echo '<th>Au</th>';
+				echo '<th>Statut</th>';
+
+			echo '</tr>';
+		echo '</thead>';
+		echo'<tbody class="table-border-bottom-0">';
+		while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
+			$id = $row['reservation_id'];
+			$start = convertDate($row['reservation_start']);
+			$end = convertDate($row['reservation_end']);
+			
+			echo"<tr ". ($row['reservation_accepted'] == 0 ? "class='table-warning'" : ($row['reservation_accepted'] == 1 ? "class='table-success'" : "class='table-danger'")) .">";
+				echo"<td><b>".$row['vehicule_modele']."</b> | ".$row['vehicule_immatriculation']."</td>";
+				echo"<td>". $start."</td>";
+				echo"<td>". $end."</td>";
+				echo"<td>". ($row['reservation_accepted'] == 0 ? "En attente" : ($row['reservation_accepted'] == 1 ? "Acceptée" : "Refusée"))."</td>";
+			echo"</tr>";
+		}
+		echo"</tbody>";
+		echo"</table>";
+	}else{
+		echo'<p class="mb-4">';
+			echo'Pas de réservation en attente';
+		echo'</p>';
+	}
+}
+
 function listAllWaitingIndex(){
 	global $connect;
 	$sql = $connect->prepare("SELECT reservation.id AS reservation_id,
@@ -559,6 +622,7 @@ function listAllWaitingIndex(){
 				echo '<th>Du</th>';
 				echo '<th>Au</th>';
 				echo '<th>Par</th>';
+				echo '<th>Motif</th>';
 				echo '<th>Valider</th>';
 				echo '<th>Refuser</th>';
 			echo '</tr>';
@@ -573,6 +637,7 @@ function listAllWaitingIndex(){
 				echo"<td>". $start."</td>";
 				echo"<td>". $end."</td>";
 				echo"<td>". $row['user_username']."</td>";
+				echo"<td style='white-space: pre-wrap;'>". $row['reservation_description']."</td>";
 				echo"<td><a href='javascript:acceptBooking(".$id.")'class='btn btn-success btn-sm' role='button'><i class='fa fa-fw fa-trash'></i> Valider</a></td>";
 				echo"<td><a href='javascript:rejectBooking(".$id.")'class='btn btn-warning btn-sm' role='button'><i class='fa fa-fw fa-trash'></i> Refuser</a></td>";
 			echo"</tr>";
