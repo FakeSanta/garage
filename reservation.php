@@ -57,7 +57,7 @@ error_reporting(E_ALL);
 		<!-- Navigation -->
 		<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-black ">
 		  <div class="container topnav">
-			<a class="navbar-brand" href="./"><h1><i class="fa fa-calendar" aria-hidden="true"></i> Réservation <?php echo $brend ?></h1></a>
+			<a class="navbar-brand" href="./"><h1><i class="fa fa-calendar" aria-hidden="true"></i> Réservation Auto <?php echo $brend ?></h1></a>
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 			  <span class="navbar-toggler-icon"></span>
 			</button>
@@ -291,80 +291,88 @@ error_reporting(E_ALL);
 						return false;
 					}
 					if (!empty($start) || !empty($end) || !empty($voiture)) {
-						// Saves informationon the database
-						$verifDate = $connect->prepare("SELECT * FROM reservation, VEHICULE WHERE reservation.id_vehicule = VEHICULE.id AND id_vehicule =? AND start< ? AND end> ?");
-						$verifDate->execute([$voiture, $end, $start]);
-						if($verifDate->rowCount()){
-							echo "<script type='text/javascript'>swal('Erreur !', 'Pas disponible dans ces crénaux', 'error');</script>";
-							echo '<meta http-equiv="refresh" content="2; ./reservation">'; 
-						}else{
-							$new_start = date('d F H:i', strtotime($start));
-							$new_end = date('d F H:i', strtotime($end));
-							$new_end = str_replace( 
-                                array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
-                                array('Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'),
-                                $new_end
-							);
-							$new_start = str_replace( 
-                                array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
-                                array('Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'),
-                                $new_start
-							);
-
-							$getVoiture = $connect->prepare("SELECT * FROM VEHICULE WHERE id = :id");
-							$getVoiture->execute(array('id' => $voiture));
-							$rowVoiture = $getVoiture->fetch(PDO::FETCH_ASSOC);
-
-							$content = "**".strtoupper($_SESSION['username'])."** - Création réservation de la ***".$rowVoiture['immatriculation']."*** du ***".$new_start."*** au ***".$new_end."***";
-							$color ="FFFF00";
-							sendDiscordAlert($content,$color);
-							if($_SESSION['role'] == 0){
-								$accepted = 0;
+						$today = date('Y-m-d');
+						if($today <= $start){
+							$verifDate = $connect->prepare("SELECT * FROM reservation, VEHICULE WHERE reservation.id_vehicule = VEHICULE.id AND id_vehicule =? AND start< ? AND end> ?");
+							$verifDate->execute([$voiture, $end, $start]);
+							if($verifDate->rowCount()){
+								echo "<script type='text/javascript'>swal('Erreur !', 'Pas disponible dans ces crénaux', 'error');</script>";
+								echo '<meta http-equiv="refresh" content="2; ./reservation">'; 
 							}else{
-								$accepted = 1;
-							}
-							$sql = $connect->prepare("INSERT INTO reservation (id_vehicule, description, start, end, id_user, accepted)VALUES (?,?,?,?,?,?)");
-							$sql->execute([$voiture,$description,$start,$end,$_SESSION['id'],$accepted]);
+								$new_start = date('d F H:i', strtotime($start));
+								$new_end = date('d F H:i', strtotime($end));
+								$new_end = str_replace( 
+									array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
+									array('Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'),
+									$new_end
+								);
+								$new_start = str_replace( 
+									array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
+									array('Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'),
+									$new_start
+								);
 
-							$getVoiture = $connect->prepare("SELECT * FROM VEHICULE WHERE id = :id");
-							$getVoiture->execute(array('id' => $voiture));
-							$infoVoiture = $getVoiture->fetch(PDO::FETCH_ASSOC);
-							// If information is correctly saved		
-							if (!$sql) {
-							echo ("Can't insert into database: ");
-							return false;
-							} else {
-								if($accepted == 0){
-									$mail = new PHPMailer();
-									$mail->CharSet = "UTF-8";
-									$mail->IsSMTP();
-									$mail->Mailer = "smtp";
+								$getVoiture = $connect->prepare("SELECT * FROM VEHICULE WHERE id = :id");
+								$getVoiture->execute(array('id' => $voiture));
+								$rowVoiture = $getVoiture->fetch(PDO::FETCH_ASSOC);
 
-									$mail->SMTPDebug  = 0;  
-									$mail->SMTPAuth   = TRUE;
-									$mail->SMTPSecure = "tls";
-									$mail->Port       = 587;
-									$mail->Host       = "smtp.gmail.com";
-									$mail->Username   = "supervision.decomble@gmail.com";
-									$mail->Password   = "rvnqrxyankxtuegm";
-									$mail->AddAddress("aurelienfevrier08@gmail.com","Auto ".$brend);
-									$mail->SetFrom("supervision.decomble@gmail.com", "Auto ".$brend);
-									$mail->Subject = $_SESSION['username']." - Demande une réservation pour ".$infoVoiture['modele']." ".$infoVoiture['marque']." | ".$infoVoiture['immatriculation']." de ".$new_start." à ".$new_end;
-									$content = $_SESSION['username']." - Demande une réservation pour ".$infoVoiture['modele']." ".$infoVoiture['marque']." | ".$infoVoiture['immatriculation']." de ".$new_start." à ".$new_end;
-									$mail->MsgHTML($content); 
-									if(!$mail->Send()) {
-										echo "Error while sending Email.";
-										echo "<script>console.log(" . json_encode($mail) . ")</script>";
-									}else{
-									}
-									echo "<script type='text/javascript'>swal('Demande créée !', 'En attente de confirmation d'un admin', 'success');</script>";
+								$content = "**".strtoupper($_SESSION['username'])."** - Création réservation de la ***".$rowVoiture['immatriculation']."*** du ***".$new_start."*** au ***".$new_end."***";
+								$color ="FFFF00";
+								sendDiscordAlert($content,$color);
+								if($_SESSION['role'] == 0){
+									$accepted = 0;
 								}else{
-									echo "<script type='text/javascript'>swal('Parfait !', 'Réservation créée', 'success');</script>";
+									$accepted = 1;
 								}
-									echo '<meta http-equiv="refresh" content="3; ./reservation">'; 
-									die();
-							}		
-							return true;
+								$sql = $connect->prepare("INSERT INTO reservation (id_vehicule, description, start, end, id_user, accepted)VALUES (?,?,?,?,?,?)");
+								$sql->execute([$voiture,$description,$start,$end,$_SESSION['id'],$accepted]);
+
+								$getVoiture = $connect->prepare("SELECT * FROM VEHICULE WHERE id = :id");
+								$getVoiture->execute(array('id' => $voiture));
+								$infoVoiture = $getVoiture->fetch(PDO::FETCH_ASSOC);
+								// If information is correctly saved		
+								if (!$sql) {
+								echo ("Can't insert into database: ");
+								return false;
+								} else {
+									if($accepted == 0){
+										$mail = new PHPMailer();
+										$mail->CharSet = "UTF-8";
+										$mail->IsSMTP();
+										$mail->Mailer = "smtp";
+
+										$mail->SMTPDebug  = 0;  
+										$mail->SMTPAuth   = TRUE;
+										$mail->SMTPSecure = "tls";
+										$mail->Port       = 587;
+										$mail->Host       = "smtp.gmail.com";
+										$mail->Username   = "supervision.decomble@gmail.com";
+										$mail->Password   = "rvnqrxyankxtuegm";
+										$query_admin = $connect->prepare("SELECT * FROM USER WHERE role = 2");
+										$query_admin->execute();
+										while($row = $query_admin->fetch(PDO::FETCH_ASSOC)){
+											$mail->AddAddress($row['mail'],"Auto ".$brend);
+										}
+										$mail->SetFrom("supervision.decomble@gmail.com", "Auto ".$brend);
+										$mail->Subject = $_SESSION['username']." - Demande une réservation pour ".$infoVoiture['modele']." ".$infoVoiture['marque']." | ".$infoVoiture['immatriculation']." de ".$new_start." à ".$new_end;
+										$content = $_SESSION['username']." - Demande une réservation pour ".$infoVoiture['modele']." ".$infoVoiture['marque']." | ".$infoVoiture['immatriculation']." de ".$new_start." à ".$new_end;
+										$mail->MsgHTML($content); 
+										if(!$mail->Send()) {
+											echo "Error while sending Email.";
+											echo "<script>console.log(" . json_encode($mail) . ")</script>";
+										}
+										echo "<script type='text/javascript'>swal('Demande créée !', 'En attente de confirmation d\'un admin', 'success');</script>";
+									}else{
+										echo "<script type='text/javascript'>swal('Parfait !', 'Réservation créée', 'success');</script>";
+									}
+										echo '<meta http-equiv="refresh" content="2; ./reservation">'; 
+										die();
+								}		
+								return true;
+							}
+						}else{
+							echo "<script type='text/javascript'>swal('Erreur !', 'Impossible de réserver une date antérieure', 'error');</script>";
+							echo '<meta http-equiv="refresh" content="2; ./reservation">'; 
 						}
 					}
 

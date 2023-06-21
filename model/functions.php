@@ -230,8 +230,8 @@ function listEvents()
 					document.getElementById('imageDiv').innerHTML = '<img src='+imgName+' onerror=".'this.style.display="none"'." class=".'img-responsive'." alt=".''." >';
 					$('#modalBody').html(event.description);
 					$('#modalBodyLoc').html(event.location);
-					$('#startTime').html(moment(event.start).format('HH:mm'));
-					$('#endTime').html(moment(event.end).format('HH:mm'));
+					$('#startTime').html(moment(event.start).format('d MMMM à HH:mm'));
+					$('#endTime').html(moment(event.end).format('d MMMM à HH:mm'));
 					$('#fullCalModal').modal('show');
 					
 					 return false;
@@ -327,8 +327,8 @@ function modalEvents()
 		  <div class='modal-body'>
 				<div class='table-responsive'>
 					<div class='col-md-12'>
-						<h4><i class='fa fa-car' aria-hidden='true'></i> <span id='modalTitle'></span></h4>
-						<p><i class='fa fa-clock-o' aria-hidden='true'></i> de <span id='startTime'></span> à <span id='endTime'></span></p>
+						<h4><i class='fa fa-car' aria-hidden='true'></i> <span id='modalTitle'></span></h4><br />
+						<h4><i class='fa fa-clock-o' aria-hidden='true'></i> du <span id='startTime'></span> au <span id='endTime'></span></h4>
 					</div>
 					<div class='col-md-12'>	
 						<div id='imageDiv'> </div>
