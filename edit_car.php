@@ -169,11 +169,12 @@
                                         }
                                         if($_POST['radio'] != $result['utilitaire']){
                                             $edit_utilitaire = 1;
+                                            echo"<script>alert('".$id_vehicule."')</script>";
                                         }
 
-                                        $get_ct =$connect->prepare("SELECT * FROM CT WHERE id = ?");
-                                        $get_ct->execute($id_vehicule);
-                                        if($edit_utilitaire == 1){
+                                        //$get_ct =$connect->prepare("SELECT * FROM CT WHERE id = ?");
+                                        //$get_ct->execute($id_vehicule);
+                                        /*if($edit_utilitaire == 1){
                                             $new_date_ct = "2023-10-06";
                                             //$new_date_ct = date('Y-m-d', strtotime($get_ct['prochaine_date_ct']. '+ 1 years'));
                                             $update_date_ct = $connect->prepare("UPDATE CT SET prochaine_date_ct = ? WHERE id_vehicule = ?");
@@ -183,7 +184,7 @@
                                             //$new_date_ct = date('Y-m-d', strtotime($get_ct['prochaine_date_ct']. '+ 1 years'));
                                             $update_date_ct = $connect->prepare("UPDATE CT SET prochaine_date_ct = ? WHERE id_vehicule = ?");
                                             $update_date_ct->execute($new_date_ct,$id_vehicule);
-                                        }
+                                        }*/
                                         
                                         $check = $connect->prepare("UPDATE VEHICULE SET immatriculation = ?, marque = ?, modele =?, motorisation=?, utilitaire=? WHERE id = ?");
                                         $check->execute([$_POST['immat'],$_POST['marque'],$_POST['modele'],$_POST['carburantSelect'],$_POST['radio'],$id_vehicule]);
@@ -207,7 +208,20 @@
                                         }
 
                                         if ($edit_utilitaire == 1) {
+                                            $get_ct =$connect->prepare("SELECT * FROM CT WHERE id_vehicule = ?");
+                                            $get_ct->execute([$id_vehicule]);
+                                            $get_ct_edit = $get_ct->fetch(PDO::FETCH_ASSOC);
                                             $modifications .= " -- Utilitaire : ".$result['utilitaire']." -> ".$_POST['radio'];
+                                            if($_POST['radio'] == 0){
+                                              //$new_date_ct = "2024-10-06";
+                                              $new_date_ct = date('Y-m-d', strtotime($get_ct_edit['prochaine_date_ct']. '+ 1 years'));
+                                            }else{
+                                              //$new_date_ct = "2023-10-06";
+                                              $new_date_ct = date('Y-m-d', strtotime($get_ct_edit['prochaine_date_ct']. '- 1 years'));
+                                            }
+                                            $update_date_ct = $connect->prepare("UPDATE CT SET prochaine_date_ct = ? WHERE id_vehicule = ?");
+                                            $update_date_ct->execute([$new_date_ct,$id_vehicule]);
+                                            echo"<script>alert('".$new_date_ct."')</script>";
                                         }
 
                                         $contentDiscord .= $modifications;
