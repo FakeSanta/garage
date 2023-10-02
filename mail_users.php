@@ -129,7 +129,7 @@
                       $mail->Password   = "rvnqrxyankxtuegm";
 
                       $mail->IsHTML(true);
-                      $mail->AddAddress($_POST['test_id'], "recipient-name");
+                      $mail->AddAddress($_POST['test_id'], "Auto-".$brend);
                       $mail->SetFrom("supervision.decomble@gmail.com", "Auto ".$brend);
                       $mail->Subject = "Test d'envoi mail d'Auto ".$brend;
                       $content = "Test d'envoi mail d'Auto ".$brend;

@@ -170,6 +170,21 @@
                                         if($_POST['radio'] != $result['utilitaire']){
                                             $edit_utilitaire = 1;
                                         }
+
+                                        $get_ct =$connect->prepare("SELECT * FROM CT WHERE id = ?");
+                                        $get_ct->execute($id_vehicule);
+                                        if($edit_utilitaire == 1){
+                                            $new_date_ct = "2023-10-06";
+                                            //$new_date_ct = date('Y-m-d', strtotime($get_ct['prochaine_date_ct']. '+ 1 years'));
+                                            $update_date_ct = $connect->prepare("UPDATE CT SET prochaine_date_ct = ? WHERE id_vehicule = ?");
+                                            $update_date_ct->execute($new_date_ct,$id_vehicule);
+                                        }else{
+                                            $new_date_ct = "2025-10-06";
+                                            //$new_date_ct = date('Y-m-d', strtotime($get_ct['prochaine_date_ct']. '+ 1 years'));
+                                            $update_date_ct = $connect->prepare("UPDATE CT SET prochaine_date_ct = ? WHERE id_vehicule = ?");
+                                            $update_date_ct->execute($new_date_ct,$id_vehicule);
+                                        }
+                                        
                                         $check = $connect->prepare("UPDATE VEHICULE SET immatriculation = ?, marque = ?, modele =?, motorisation=?, utilitaire=? WHERE id = ?");
                                         $check->execute([$_POST['immat'],$_POST['marque'],$_POST['modele'],$_POST['carburantSelect'],$_POST['radio'],$id_vehicule]);
                                         $contentDiscord = "**" . strtoupper($_SESSION['username']) . "** - Modification du véhicule ***" . $_POST['marque'] ." ".$_POST['modele']."***";

@@ -38,7 +38,7 @@
             $sql->execute();
             if($sql->RowCount() > 1){
                 while($to = $sql->fetch(PDO::FETCH_ASSOC)){
-                    $mail->AddAddress($to['mail'],"osef");
+                    $mail->AddAddress($to['mail'],"Auto-".$brend);
                 }
                 $mail->IsHTML(true);
                 $mail->SetFrom("supervision.decomble@gmail.com", "Auto ".$brend);
